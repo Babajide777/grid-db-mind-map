@@ -26,11 +26,7 @@ const styles = {
     padding: 0,
     margin: 0,
     boxSizing: "border-box",
-  },
-  headAndMain: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
+    backgroundColor: "#E5E5E5",
   },
 };
 
