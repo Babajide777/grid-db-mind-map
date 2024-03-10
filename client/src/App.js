@@ -6,6 +6,7 @@ import "@fontsource/roboto/700.css";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "./config/theme";
 import MainMindMap from "./components/MainMindMap";
+import FormInput from "./components/FormInput";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <CssBaseline />
       <Box component="main" style={styles.mainContianer}>
         <MainMindMap />
+        <FormInput />
       </Box>
     </ThemeProvider>
   );
