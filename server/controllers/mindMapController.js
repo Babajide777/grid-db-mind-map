@@ -22,38 +22,12 @@ const addMealPlan = async (req, res) => {
   }
 
   try {
-    const {
-      title,
-      calories,
-      fat,
-      cabs,
-      protein,
-      days,
-      breakfast,
-      lunch,
-      dinner,
-      snack1,
-      snack2,
-      snack3,
-    } = req.body;
+    const { source, target, x, y, label } = req.body;
 
     const id = uuidv4();
+    const lineId = uuidv4();
 
-    const data = [
-      id,
-      title,
-      calories,
-      fat,
-      cabs,
-      protein,
-      days.join(";"),
-      breakfast,
-      lunch,
-      dinner,
-      snack1,
-      snack2,
-      snack3,
-    ];
+    const data = [source, target, x, y, label, id, lineId];
 
     const saveStatus = await insert(data, collectionDb);
 
