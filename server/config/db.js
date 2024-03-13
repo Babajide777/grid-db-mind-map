@@ -1,6 +1,6 @@
 const griddb = require("griddb-node-api");
 
-const containerName = "meal-planner";
+const containerName = "mind-map";
 
 const initStore = async () => {
   const factory = griddb.StoreFactory.getInstance();
