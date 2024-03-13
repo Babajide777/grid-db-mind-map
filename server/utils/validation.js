@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-//meal plan validation rules
+//map item validation rules
 const mapItemValidation = async (field) => {
   const schema = Joi.object({
     source: Joi.string().required(),
