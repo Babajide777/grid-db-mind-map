@@ -39,9 +39,7 @@ const FormInput = () => {
         width: { xs: "70%", md: "20%" }
       }}
     >
-      <Typography variant="h6" sx={{ fontSize: "" }}>
-        Enter a new idea
-      </Typography>
+      <Typography variant="h6">Enter a new idea</Typography>
       <Box
         component="form"
         display="flex"
