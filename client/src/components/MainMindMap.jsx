@@ -2,19 +2,21 @@ import React, { useCallback } from "react"
 import ReactFlow, { useNodesState, useEdgesState, addEdge } from "reactflow"
 import "reactflow/dist/style.css"
 
-const initialNodes = [
-  { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
-  { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
-  { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } }
-]
-const initialEdges = [
-  { id: "e1-2", source: "1", target: "4" },
-  { id: "e1-3", source: "1", target: "3" },
-  { id: "e1-4", source: "2", target: "4" }
-]
+export default function MainMindMap({ dataSubmit }) {
+  console.log(dataSubmit)
+  const initialNodes = [
+    {
+      id: "1",
+      position: { x: dataSubmit.x, y: dataSubmit.y },
+      data: { label: dataSubmit.label }
+    }
+  ]
+  const initialEdges = [
+    { id: "e1-2", source: dataSubmit.source, target: dataSubmit.target }
+  ]
 
-export default function MainMindMap() {
+  console.log(initialNodes, initialEdges)
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 

@@ -1,5 +1,4 @@
 import React from "react"
-import { useForm } from "react-hook-form"
 import { Box } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
@@ -16,17 +15,7 @@ import FormDetails from "./FormDetails"
 
 //Submit
 
-const FormInput = () => {
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors }
-  } = useForm()
-  const onSubmit = data => {
-    console.log(data)
-    reset()
-  }
+const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
   return (
     <Box
       display="flex"
