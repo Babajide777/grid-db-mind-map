@@ -4,16 +4,7 @@ import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import { Details } from "./data"
 import FormDetails from "./FormDetails"
-
-//Enter a new idea
-
-// source
-// target
-// x
-// y
-// label
-
-//Submit
+import { useForm } from "react-hook-form"
 
 const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
   return (

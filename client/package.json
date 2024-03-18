@@ -14,9 +14,12 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-flow": "^1.0.3",
+    "react-flow-renderer": "^10.3.17",
     "react-scripts": "5.0.1",
     "reactflow": "^11.10.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.5.2"
   },
   "scripts": {
     "start": "react-scripts start",

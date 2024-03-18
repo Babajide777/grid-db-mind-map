@@ -1,39 +1,73 @@
 import React, { useCallback } from "react"
-import ReactFlow, { useNodesState, useEdgesState, addEdge } from "reactflow"
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge
+} from "reactflow"
 import "reactflow/dist/style.css"
 
 export default function MainMindMap({ dataSubmit }) {
   console.log(dataSubmit)
+  const { positionX, positionY, label, source, target } = dataSubmit
   const initialNodes = [
     {
       id: "1",
-      position: { x: dataSubmit.x, y: dataSubmit.y },
-      data: { label: dataSubmit.label }
+      position: { x: 0, y: 0 },
+      data: { label }
     }
   ]
-  const initialEdges = [
-    { id: "e1-2", source: dataSubmit.source, target: dataSubmit.target }
-  ]
+  const initialEdges = []
+  // { id: "e1-2", source, target }
 
   console.log(initialNodes, initialEdges)
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [nodes, setNodes] = useNodesState(initialNodes)
+  const [edges, setEdges] = useEdgesState(initialEdges)
 
-  const onConnect = useCallback(
-    params => setEdges(eds => addEdge(params, eds)),
-    [setEdges]
-  )
+  const onNodesChange = useCallback(() => {
+    const newNode = {
+      id: `n${nodes.length + 1}`,
+      position: {
+        x: positionX * window.innerWidth,
+        y: positionY * window.innerHeight
+      },
+      data: { label: label }
+    }
+    setNodes(prevNodes => [...prevNodes, newNode])
+  }, [nodes])
+
+  const onEdgesChange = useCallback(() => {
+    const newEdge = {
+      id: `e${edges.length - edges.length + 1}`,
+      source,
+      target,
+      label: "to the",
+      type: "step"
+    }
+    setEdges(prevEdges => [...prevEdges, newEdge])
+  }, [edges, source, target])
+
+  // const onConnect = useCallback(
+  //   params => setEdges(prevEdges => addEdge(params, prevEdges)),
+  //   [setEdges]
+  // )
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        // onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      />
+      >
+        <MiniMap />
+        <Controls />
+        <Background />
+      </ReactFlow>
     </div>
   )
 }

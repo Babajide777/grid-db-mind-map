@@ -19,6 +19,7 @@ function App() {
   } = useForm()
   const onSubmit = data => {
     // console.log(data)
+    console.log("Form data submitted:", data)
     setDataSubmit(data)
     reset()
   }
