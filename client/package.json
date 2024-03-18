@@ -6,6 +6,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.12",
+    "@hookform/resolvers": "^3.3.4",
     "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.12",
     "@testing-library/jest-dom": "^5.17.0",
@@ -13,9 +14,12 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-flow": "^1.0.3",
+    "react-flow-renderer": "^10.3.17",
     "react-scripts": "5.0.1",
     "reactflow": "^11.10.4",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
