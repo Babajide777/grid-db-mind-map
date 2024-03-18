@@ -1,12 +1,24 @@
-import React from "react"
-import { Box } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
-import { Details } from "./data"
-import FormDetails from "./FormDetails"
-import { useForm } from "react-hook-form"
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { Details } from "./data";
+import FormDetails from "./FormDetails";
+import { useForm } from "react-hook-form";
 
-const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
+const FormInput = () => {
+  const [dataSubmit, setDataSubmit] = useState("");
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    console.log("Form data submitted:", data);
+    setDataSubmit(data);
+    reset();
+  };
   return (
     <Box
       display="flex"
@@ -16,7 +28,7 @@ const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
       sx={{
         background: "white",
         height: { xs: "460px" },
-        width: { xs: "70%", md: "20%" }
+        width: { xs: "70%", md: "20%" },
       }}
     >
       <Typography variant="h6">Enter a new idea</Typography>
@@ -46,14 +58,14 @@ const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
             width: "80%",
             py: "6px",
             mt: "20px",
-            textTransform: "lowercase"
+            textTransform: "lowercase",
           }}
         >
           Continue
         </Button>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default FormInput
+export default FormInput;
