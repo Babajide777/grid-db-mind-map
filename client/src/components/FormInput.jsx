@@ -9,7 +9,6 @@ import { useAddMapItemMutation } from "../store/Features/mapItem/mapItemApiSlice
 import { toast } from "react-toastify";
 
 const FormInput = () => {
-  const [dataSubmit, setDataSubmit] = useState("");
   const [addMapItem] = useAddMapItemMutation();
   const {
     register,
@@ -19,8 +18,7 @@ const FormInput = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      console.log("Form data submitted:", data);
-      const gottenData = await addMapItem({
+      const { message } = await addMapItem({
         source: data.source,
         target: data.target,
         x: Number(data.positionX),
@@ -28,11 +26,19 @@ const FormInput = () => {
         label: data.label,
       }).unwrap();
 
-      console.log(gottenData);
-      // setDataSubmit(data);
-      // reset();
+      toast.success(`${message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      reset();
     } catch (error) {
-      console.log(error);
       let msg =
         error.message ||
         (error.data && error.data.message) ||

@@ -5,7 +5,7 @@ const Details = [
     errorParams: {
       required: "source is required.",
       pattern: {
-        value: /^[a-zA-Z0-9]+$/,
+        value: /^.*$/,
         message: "Source must have an alphanumeric value.",
       },
     },
@@ -16,7 +16,7 @@ const Details = [
     errorParams: {
       required: "target is required.",
       pattern: {
-        value: /^[a-zA-Z0-9]+$/,
+        value: /^.*$/,
         message: "Target must have an alphanumeric value.",
       },
     },
