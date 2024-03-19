@@ -8,10 +8,16 @@ import ReactFlow, {
   addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlice";
 
 export default function MainMindMap({ dataSubmit }) {
-  // console.log(dataSubmit);
-  // const { positionX, positionY, label, source, target } = dataSubmit;
+  const { data: mapItems, isLoading } = useGetAllMapItemsQuery("mapItems", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
+  console.log(mapItems, isLoading);
   const initialNodes = [
     { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
     { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
@@ -41,9 +47,9 @@ export default function MainMindMap({ dataSubmit }) {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
       >
-        {/* <MiniMap /> */}
+        <MiniMap />
         <Controls />
-        {/* <Background /> */}
+        <Background />
       </ReactFlow>
     </div>
   );

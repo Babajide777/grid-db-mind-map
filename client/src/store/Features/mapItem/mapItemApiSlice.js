@@ -16,9 +16,12 @@ export const mapItemApiSlice = apiSlice.injectEndpoints({
         },
       }),
       transformResponse: (responseData) => {
-        return signalAdapter.setAll(initialState, responseData);
+        console.log("here");
+        console.log({ responseData });
+        return mapItemAdapter.setAll(initialState, responseData.data);
       },
       providesTags: (result, error, arg) => {
+        console.log({ result });
         if (result?.ids) {
           return [
             { type: "mapItems", id: "LIST" },

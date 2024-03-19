@@ -1,6 +1,4 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { apiSlice } from "./api/apiSlice";
-import auth from "./Features/auth/authSlice";
 import {
   persistStore,
   persistReducer,
@@ -12,17 +10,16 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { authApiSlice } from "./Features/auth/authApiSlice";
+import { mapItemApiSlice } from "./Features/mapItem/mapItemApiSlice";
 
 const userDataPersistConfig = {
-  key: "auth",
+  key: "mapItems",
   version: 1,
   storage,
 };
 
 const rootReducer = combineReducers({
-  [authApiSlice.reducerPath]: authApiSlice.reducer,
-  [auth.name]: auth,
+  [mapItemApiSlice.reducerPath]: mapItemApiSlice.reducer,
 });
 const persistedReducer = persistReducer(userDataPersistConfig, rootReducer);
 
@@ -33,7 +30,7 @@ let store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware),
+    }).concat(mapItemApiSlice.middleware),
   devTools: true,
 });
 

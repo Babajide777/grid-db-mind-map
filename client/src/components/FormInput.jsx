@@ -5,19 +5,49 @@ import Button from "@mui/material/Button";
 import { Details } from "./data";
 import FormDetails from "./FormDetails";
 import { useForm } from "react-hook-form";
+import { useAddMapItemMutation } from "../store/Features/mapItem/mapItemApiSlice";
+import { toast } from "react-toastify";
 
 const FormInput = () => {
   const [dataSubmit, setDataSubmit] = useState("");
+  const [addMapItem] = useAddMapItemMutation();
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log("Form data submitted:", data);
-    setDataSubmit(data);
-    reset();
+  const onSubmit = async (data) => {
+    try {
+      console.log("Form data submitted:", data);
+      const gottenData = await addMapItem({
+        source: data.source,
+        target: data.target,
+        x: Number(data.positionX),
+        y: Number(data.positionY),
+        label: data.label,
+      }).unwrap();
+
+      console.log(gottenData);
+      // setDataSubmit(data);
+      // reset();
+    } catch (error) {
+      console.log(error);
+      let msg =
+        error.message ||
+        (error.data && error.data.message) ||
+        "An error occurred";
+      toast.error(`${msg}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   return (
     <Box
