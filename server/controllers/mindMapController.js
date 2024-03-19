@@ -29,7 +29,7 @@ const addMealItem = async (req, res) => {
     const id = uuidv4();
     const lineId = uuidv4();
 
-    const data = [source, target, x, y, label, id, lineId];
+    const data = [id, source, target, x, y, label, lineId];
 
     const saveStatus = await insert(data, collectionDb);
 
@@ -37,12 +37,12 @@ const addMealItem = async (req, res) => {
       const result = await queryByID(id, conInfo, store);
       console.log(result);
       let returnData = {
-        source: result[0],
-        target: result[1],
-        x: result[2],
-        y: result[3],
-        label: result[4],
-        id: result[5],
+        id: result[0],
+        source: result[1],
+        target: result[2],
+        x: result[3],
+        y: result[4],
+        label: result[5],
         lineId: result[6],
       };
 
@@ -77,12 +77,12 @@ const mapItemDetails = async (req, res) => {
 
     console.log(result);
     let returnData = {
-      source: result[0],
-      target: result[1],
-      x: result[2],
-      y: result[3],
-      label: result[4],
-      id: result[5],
+      id: result[0],
+      source: result[1],
+      target: result[2],
+      x: result[3],
+      y: result[4],
+      label: result[5],
       lineId: result[6],
     };
 
@@ -109,7 +109,7 @@ const editMapItem = async (req, res) => {
 
     const { source, target, x, y, label, lineId } = req.body;
 
-    const data = [source, target, x, y, label, id, lineId];
+    const data = [id, source, target, x, y, label, lineId];
 
     const check = await editByID(store, conInfo, data);
 
@@ -117,13 +117,14 @@ const editMapItem = async (req, res) => {
       const result2 = await queryByID(id, conInfo, store);
 
       console.log(result2);
+
       let returnData = {
-        source: result2[0],
-        target: result2[1],
-        x: result2[2],
-        y: result2[3],
-        label: result2[4],
-        id: result2[5],
+        id: result2[0],
+        source: result2[1],
+        target: result2[2],
+        x: result2[3],
+        y: result2[4],
+        label: result2[5],
         lineId: result2[6],
       };
 
@@ -167,15 +168,14 @@ const getAllMapItems = async (req, res) => {
 
     result.results.forEach((result) => {
       let returnData = {
-        source: result[0],
-        target: result[1],
-        x: result[2],
-        y: result[3],
-        label: result[4],
-        id: result[5],
+        id: result[0],
+        source: result[1],
+        target: result[2],
+        x: result[3],
+        y: result[4],
+        label: result[5],
         lineId: result[6],
       };
-
       data.push(returnData);
 
       return result;
