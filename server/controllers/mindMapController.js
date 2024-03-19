@@ -15,7 +15,6 @@ const { v4: uuidv4 } = require("uuid");
 
 const addMealItem = async (req, res) => {
   //validate req.body
-
   const { collectionDb, store, conInfo } = await initGridDbTS();
 
   const { details } = await mapItemValidation(req.body);
@@ -36,12 +35,24 @@ const addMealItem = async (req, res) => {
 
     if (saveStatus.status) {
       const result = await queryByID(id, conInfo, store);
+      console.log(result);
+      let returnData = {
+        source: result[0],
+        target: result[1],
+        x: result[2],
+        y: result[3],
+        label: result[4],
+        id: result[5],
+        lineId: result[6],
+      };
+
+      console.log({ returnData });
       return responseHandler(
         res,
         "Map Item saved successfully",
         201,
         true,
-        result
+        returnData
       );
     }
 
@@ -64,8 +75,21 @@ const mapItemDetails = async (req, res) => {
 
     const result = await queryByID(id, conInfo, store);
 
+    console.log(result);
+    let returnData = {
+      source: result[0],
+      target: result[1],
+      x: result[2],
+      y: result[3],
+      label: result[4],
+      id: result[5],
+      lineId: result[6],
+    };
+
+    console.log({ returnData });
+
     return result
-      ? responseHandler(res, "map item detail found", 200, true, result)
+      ? responseHandler(res, "map item detail found", 200, true, returnData)
       : responseHandler(res, "No map item detail found", 400, false, "");
   } catch (error) {
     responseHandler(res, "Error saving map item", 400, false, error.message);
@@ -92,12 +116,25 @@ const editMapItem = async (req, res) => {
     if (check[0]) {
       const result2 = await queryByID(id, conInfo, store);
 
+      console.log(result2);
+      let returnData = {
+        source: result2[0],
+        target: result2[1],
+        x: result2[2],
+        y: result2[3],
+        label: result2[4],
+        id: result2[5],
+        lineId: result2[6],
+      };
+
+      console.log({ returnData });
+
       return responseHandler(
         res,
         "map item edited successfully",
         200,
         true,
-        result2
+        returnData
       );
     }
     return responseHandler(res, "Error editing map item ", 400, false, "");
@@ -125,12 +162,32 @@ const getAllMapItems = async (req, res) => {
   try {
     const { store, conInfo } = await initGridDbTS();
     const result = await queryAll(conInfo, store);
+    let data = [];
+    console.log(result.results);
+
+    result.results.forEach((result) => {
+      let returnData = {
+        source: result[0],
+        target: result[1],
+        x: result[2],
+        y: result[3],
+        label: result[4],
+        id: result[5],
+        lineId: result[6],
+      };
+
+      data.push(returnData);
+
+      return result;
+    });
+
+    console.log({ data });
     return responseHandler(
       res,
       "all map items in the database successfully retrieved",
       200,
       true,
-      result.results
+      data
     );
   } catch (error) {
     return responseHandler(
