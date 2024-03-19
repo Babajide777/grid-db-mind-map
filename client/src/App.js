@@ -10,30 +10,11 @@ import MainMindMap from "./components/MainMindMap"
 import FormInput from "./components/FormInput"
 
 function App() {
-  const [dataSubmit, setDataSubmit] = useState("")
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors }
-  } = useForm()
-  const onSubmit = data => {
-    // console.log(data)
-    console.log("Form data submitted:", data)
-    setDataSubmit(data)
-    reset()
-  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box component="main" style={styles.mainContianer} display="flex">
-        <MainMindMap dataSubmit={dataSubmit} />
-        <FormInput
-          onSubmit={onSubmit}
-          register={register}
-          errors={errors}
-          handleSubmit={handleSubmit}
-        />
+        <MainMindMap />
       </Box>
     </ThemeProvider>
   )

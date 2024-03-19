@@ -20,7 +20,11 @@ const Details = [
     errorMessage: "Please enter a valid x.",
     errorParams: {
       required: "x is required.",
-      pattern: { value: /^\d+$/, message: "x must be numeric." }
+      pattern: {
+        value: /^\d+$/,
+        message: "x must be numeric.",
+        alphanumericValue: /^-?\d*(.\d+)?$/
+      }
     }
   },
   {
@@ -28,7 +32,11 @@ const Details = [
     errorMessage: "Please enter a valid y.",
     errorParams: {
       required: "y is required.",
-      pattern: { value: /^\d+$/, message: "y must be numeric." }
+      pattern: {
+        value: /^\d+$/,
+        message: "y must be numeric.",
+        alphanumericValue: /^-?\d*(.\d+)?$/
+      }
     }
   },
   {

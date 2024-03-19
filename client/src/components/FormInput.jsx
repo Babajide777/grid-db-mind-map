@@ -14,9 +14,11 @@ const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
       alignItems="center"
       justifyContent="center"
       sx={{
+        position: "absolute",
+        right: "0px",
         background: "white",
         height: { xs: "460px" },
-        width: { xs: "70%", md: "20%" }
+        width: { xs: "40%", md: "20%" }
       }}
     >
       <Typography variant="h6">Enter a new idea</Typography>
