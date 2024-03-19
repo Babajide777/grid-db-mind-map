@@ -33,6 +33,8 @@ const addMealItem = async (req, res) => {
 
     const saveStatus = await insert(data, collectionDb);
 
+    console.log({ saveStatus });
+
     if (saveStatus.status) {
       const result = await queryByID(id, conInfo, store);
       console.log(result);

@@ -23,12 +23,12 @@ function initContainer() {
   const conInfo = new griddb.ContainerInfo({
     name: containerName,
     columnInfoList: [
+      ["id", griddb.Type.STRING],
       ["source", griddb.Type.STRING],
       ["target", griddb.Type.STRING],
       ["x", griddb.Type.DOUBLE],
       ["y", griddb.Type.DOUBLE],
       ["label", griddb.Type.STRING],
-      ["id", griddb.Type.STRING],
       ["lineId", griddb.Type.STRING],
     ],
     type: griddb.ContainerType.COLLECTION,
