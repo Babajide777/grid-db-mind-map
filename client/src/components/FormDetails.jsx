@@ -2,7 +2,7 @@ import React from "react"
 import { useForm } from "react-hook-form"
 import { Typography, TextField, Box } from "@mui/material"
 
-const FormDetails = ({ name, errors, register, errorParams }) => {
+const FormDetails = ({ name, errors, register, errorParams, inputType }) => {
   return (
     <Box
       sx={{
@@ -15,19 +15,25 @@ const FormDetails = ({ name, errors, register, errorParams }) => {
       <Typography variant="p" sx={{ fontSize: "12px" }}>
         {name}
       </Typography>
-      <TextField
-        id={name}
-        type="text"
-        name={name}
-        size="small"
-        sx={{
-          "& .MuiOutlinedInput-input": {
-            color: "#aaa",
-            height: 10
-          }
-        }}
-        {...register(name, errorParams)}
-      />
+      {inputType === "select" ? (
+        <select>
+          <option value="option1">Option 1</option>
+        </select>
+      ) : (
+        <TextField
+          id={name}
+          type="text"
+          name={name}
+          size="small"
+          sx={{
+            "& .MuiOutlinedInput-input": {
+              color: "#aaa",
+              height: 10
+            }
+          }}
+          {...register(name, errorParams)}
+        />
+      )}
       {errors && errors[name] && (
         <Typography
           variant="p"

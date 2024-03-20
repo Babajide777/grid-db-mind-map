@@ -13,18 +13,6 @@ const Details = [
   },
   {
     inputType: "text",
-    name: "target",
-    errorMessage: "Please enter a valid target.",
-    errorParams: {
-      required: "target is required.",
-      pattern: {
-        value: /^.*$/,
-        message: "Target must have an alphanumeric value."
-      }
-    }
-  },
-  {
-    inputType: "text",
     name: "positionX",
     errorMessage: "Please enter a valid x.",
     errorParams: {

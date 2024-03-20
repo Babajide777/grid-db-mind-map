@@ -1,7 +1,4 @@
-const {
-  mealPlanValidation,
-  mapItemValidation,
-} = require("../utils/validation");
+const { mapItemValidation } = require("../utils/validation");
 const {
   initGridDbTS,
   insert,
@@ -11,7 +8,6 @@ const {
   editByID,
 } = require("../config/db");
 const { responseHandler } = require("../utils/responseHandler");
-const { v4: uuidv4 } = require("uuid");
 
 const addMealItem = async (req, res) => {
   //validate req.body
@@ -24,20 +20,14 @@ const addMealItem = async (req, res) => {
   }
 
   try {
-    const { source, target, x, y, label } = req.body;
-
-    const id = uuidv4();
-    const lineId = uuidv4();
+    const { id, source, target, x, y, label, lineId } = req.body;
 
     const data = [id, source, target, x, y, label, lineId];
 
     const saveStatus = await insert(data, collectionDb);
 
-    console.log({ saveStatus });
-
     if (saveStatus.status) {
       const result = await queryByID(id, conInfo, store);
-      console.log(result);
       let returnData = {
         id: result[0],
         source: result[1],
@@ -48,7 +38,6 @@ const addMealItem = async (req, res) => {
         lineId: result[6],
       };
 
-      console.log({ returnData });
       return responseHandler(
         res,
         "Map Item saved successfully",
@@ -77,7 +66,6 @@ const mapItemDetails = async (req, res) => {
 
     const result = await queryByID(id, conInfo, store);
 
-    console.log(result);
     let returnData = {
       id: result[0],
       source: result[1],
@@ -87,8 +75,6 @@ const mapItemDetails = async (req, res) => {
       label: result[5],
       lineId: result[6],
     };
-
-    console.log({ returnData });
 
     return result
       ? responseHandler(res, "map item detail found", 200, true, returnData)
@@ -118,8 +104,6 @@ const editMapItem = async (req, res) => {
     if (check[0]) {
       const result2 = await queryByID(id, conInfo, store);
 
-      console.log(result2);
-
       let returnData = {
         id: result2[0],
         source: result2[1],
@@ -129,8 +113,6 @@ const editMapItem = async (req, res) => {
         label: result2[5],
         lineId: result2[6],
       };
-
-      console.log({ returnData });
 
       return responseHandler(
         res,
@@ -166,7 +148,6 @@ const getAllMapItems = async (req, res) => {
     const { store, conInfo } = await initGridDbTS();
     const result = await queryAll(conInfo, store);
     let data = [];
-    console.log(result.results);
 
     result.results.forEach((result) => {
       let returnData = {
@@ -183,7 +164,6 @@ const getAllMapItems = async (req, res) => {
       return result;
     });
 
-    console.log({ data });
     return responseHandler(
       res,
       "all map items in the database successfully retrieved",
