@@ -24,7 +24,7 @@ import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlic
 
 export default function MainMindMap() {
   const { data } = useGetAllMapItemsQuery("mapItems", {
-    pollingInterval: 1000,
+    pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
