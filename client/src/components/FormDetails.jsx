@@ -24,14 +24,14 @@ const FormDetails = ({
       </Typography>
       {inputType === "select" ? (
         <select {...register(name, errorParams)} defaultValue="">
-          <option value="" disabled hidden>
+          {/* <option value="" disabled hidden>
             Select a source
           </option>
           {initialNodes.map(node => (
             <option key={node.id} value={node.id}>
               {node.id}
             </option>
-          ))}
+          ))} */}
         </select>
       ) : (
         <TextField
