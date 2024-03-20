@@ -65,7 +65,7 @@ const FormInput = () => {
         position: "absolute",
         right: "0px",
         background: "white",
-        height: { xs: "460px" },
+        height: { xs: "400px" },
         width: { xs: "70%", md: "20%" }
       }}
     >

@@ -2,7 +2,14 @@ import React from "react"
 import { useForm } from "react-hook-form"
 import { Typography, TextField, Box } from "@mui/material"
 
-const FormDetails = ({ name, errors, register, errorParams, inputType }) => {
+const FormDetails = ({
+  name,
+  errors,
+  register,
+  errorParams,
+  inputType,
+  initialNodes
+}) => {
   return (
     <Box
       sx={{
@@ -16,8 +23,15 @@ const FormDetails = ({ name, errors, register, errorParams, inputType }) => {
         {name}
       </Typography>
       {inputType === "select" ? (
-        <select>
-          <option value="option1">Option 1</option>
+        <select {...register(name, errorParams)} defaultValue="">
+          <option value="" disabled hidden>
+            Select a source
+          </option>
+          {initialNodes.map(node => (
+            <option key={node.id} value={node.id}>
+              {node.id}
+            </option>
+          ))}
         </select>
       ) : (
         <TextField
