@@ -1,12 +1,60 @@
-import React from "react"
+import React, { useState } from "react"
 import { Box } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import { Details } from "./data"
 import FormDetails from "./FormDetails"
 import { useForm } from "react-hook-form"
+import { useAddMapItemMutation } from "../store/Features/mapItem/mapItemApiSlice"
+import { toast } from "react-toastify"
 
-const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
+const FormInput = () => {
+  const [addMapItem] = useAddMapItemMutation()
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
+  const onSubmit = async data => {
+    try {
+      const { message } = await addMapItem({
+        source: data.source,
+        target: data.target,
+        x: Number(data.positionX),
+        y: Number(data.positionY),
+        label: data.label
+      }).unwrap()
+
+      toast.success(`${message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      })
+
+      reset()
+    } catch (error) {
+      let msg =
+        error.message ||
+        (error.data && error.data.message) ||
+        "An error occurred"
+      toast.error(`${msg}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      })
+    }
+  }
   return (
     <Box
       display="flex"
@@ -18,7 +66,7 @@ const FormInput = ({ onSubmit, register, errors, handleSubmit }) => {
         right: "0px",
         background: "white",
         height: { xs: "460px" },
-        width: { xs: "40%", md: "20%" }
+        width: { xs: "70%", md: "20%" }
       }}
     >
       <Typography variant="h6">Enter a new idea</Typography>

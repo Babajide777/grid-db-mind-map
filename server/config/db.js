@@ -1,6 +1,6 @@
 const griddb = require("griddb-node-api");
 
-const containerName = "meal-planner";
+const containerName = "mind-map";
 
 const initStore = async () => {
   const factory = griddb.StoreFactory.getInstance();
@@ -24,18 +24,12 @@ function initContainer() {
     name: containerName,
     columnInfoList: [
       ["id", griddb.Type.STRING],
-      ["title", griddb.Type.STRING],
-      ["calories", griddb.Type.DOUBLE],
-      ["fat", griddb.Type.DOUBLE],
-      ["cabs", griddb.Type.DOUBLE],
-      ["protein", griddb.Type.DOUBLE],
-      ["days", griddb.Type.STRING],
-      ["breakfast", griddb.Type.STRING],
-      ["lunch", griddb.Type.STRING],
-      ["dinner", griddb.Type.STRING],
-      ["snack1", griddb.Type.STRING],
-      ["snack2", griddb.Type.STRING],
-      ["snack3", griddb.Type.STRING],
+      ["source", griddb.Type.STRING],
+      ["target", griddb.Type.STRING],
+      ["x", griddb.Type.DOUBLE],
+      ["y", griddb.Type.DOUBLE],
+      ["label", griddb.Type.STRING],
+      ["lineId", griddb.Type.STRING],
     ],
     type: griddb.ContainerType.COLLECTION,
     rowKey: true,
@@ -116,7 +110,7 @@ async function insert(data, container) {
   try {
     let savedData = await container.put(data);
 
-	  console.log(savedData)
+    console.log(savedData);
     return { status: true };
   } catch (err) {
     if (err.constructor.name == "GSException") {

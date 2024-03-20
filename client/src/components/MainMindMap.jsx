@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback } from "react"
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -7,83 +7,84 @@ import ReactFlow, {
   useEdgesState,
   addEdge
 } from "reactflow"
-import { Box } from "@mui/material"
-import { useForm } from "react-hook-form"
-import FormInput from "./FormInput"
 import "reactflow/dist/style.css"
+import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlice"
+
+// const initialNodes = [
+//   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
+//   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
+//   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
+//   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } },
+// ];
+// const initialEdges = [
+//   { id: "e1-2", source: "1", target: "4" },
+//   { id: "e1-3", source: "1", target: "3" },
+//   { id: "e1-4", source: "2", target: "4" },
+// ];
 
 export default function MainMindMap() {
-  const [dataSubmit, setDataSubmit] = useState("")
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors }
-  } = useForm()
+  const { data, isLoading } = useGetAllMapItemsQuery("mapItems", {
+    pollingInterval: 1000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
+  })
 
-  const { positionX, positionY, label, source, target } = dataSubmit
+  const { entities } = data
 
-  const onSubmit = data => {
-    setDataSubmit(data)
-    onEdgesChange()
-    onNodesChange()
-    reset()
-  }
+  const mapItems = Object.values(entities)
 
-  const initialNodes = [
-    {
-      id: "1",
-      position: { x: 0, y: 0 },
-      data: { label: "Mind map" },
-      type: "input"
+  console.log({ mapItems })
+
+  const theInitialNodes = mapItems.map(item => {
+    return {
+      id: item.id,
+      position: { x: item.x, y: item.y },
+      data: { label: item.label }
     }
+  })
+  const theInitialEdges = mapItems.map(item => {
+    return { id: item.lineId, source: item.source, target: item.target }
+  })
+
+  // const initialNodes = [...theInitialNodes];
+  // const initialEdges = [...theInitialEdges];
+
+  // const initialNodes = [
+  //   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
+  //   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
+  //   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
+  //   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } },
+  // ];
+  // const initialEdges = [
+  //   { id: "e1-2", source: "1", target: "4" },
+  //   { id: "e1-3", source: "1", target: "3" },
+  //   { id: "e1-4", source: "2", target: "4" },
+  // ];
+  const initialNodes = [
+    { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
+    { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
+    { id: "3", position: { x: 0, y: 200 }, data: { label: "Third" } },
+    { id: "4", position: { x: 300, y: 200 }, data: { label: "Fourth" } },
+    { id: "5", position: { x: 500, y: 400 }, data: { label: "Fivth" } }
+  ]
+  const initialEdges = [
+    { id: "e1-1", source: "0", target: "0" },
+    { id: "e1-2", source: "1", target: "2" },
+    { id: "e1-3", source: "2", target: "3" },
+    { id: "e1-4", source: "2", target: "4" },
+    { id: "e1-5", source: "3", target: "5" }
   ]
 
-  const initialEdges = []
-
-  const [nodes, setNodes] = useNodesState(initialNodes)
-  const [edges, setEdges] = useEdgesState(initialEdges)
-
-  const onNodesChange = useCallback(() => {
-    if (!dataSubmit) return
-
-    const newNode = {
-      id: `${nodes.length + 1}`,
-      position: {
-        x: positionX,
-        y: positionY
-      },
-      data: { label: label }
-    }
-    setNodes(prevNodes => [...prevNodes, newNode])
-  }, [positionX, positionY, label, setNodes, nodes.length, dataSubmit])
-
-  const onEdgesChange = useCallback(() => {
-    if (!dataSubmit) return
-
-    const newEdge = {
-      id: `e${edges.length - edges.length + 1}`,
-      source: { source },
-      target: { target },
-      type: "smoothstep"
-    }
-    setEdges(prevEdges => [...prevEdges, newEdge])
-  }, [edges, source, target, setEdges, dataSubmit])
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
   const onConnect = useCallback(
-    params => setEdges(prevEdges => addEdge(params, prevEdges)),
+    params => setEdges(eds => addEdge(params, eds)),
     [setEdges]
   )
 
-  const connectionLineStyle = {
-    stroke: "#9999",
-    strokeWidth: 3
-  }
-  const defaultEdgeOptions = { style: connectionLineStyle, type: "mindmap" }
-
   return (
-    <Box
-      component="div"
+    <div
       sx={{ display: "flex", position: "relative" }}
       style={{ width: "100vw", height: "100vh" }}
     >
@@ -93,19 +94,12 @@ export default function MainMindMap() {
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        connectionLineStyle={connectionLineStyle}
         style={{ width: "100vw" }}
       >
         <MiniMap />
         <Controls />
         <Background />
       </ReactFlow>
-      <FormInput
-        onSubmit={onSubmit}
-        register={register}
-        errors={errors}
-        handleSubmit={handleSubmit}
-      />
-    </Box>
+    </div>
   )
 }
