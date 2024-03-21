@@ -34,6 +34,7 @@ export default function MainMindMap() {
   if (data) {
     const { entities } = data;
     const mapItems = Object.values(entities);
+    console.log({ mapItems });
 
     const theInitialNodes = mapItems.map((item) => {
       return {

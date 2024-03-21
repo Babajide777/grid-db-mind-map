@@ -14,6 +14,7 @@ import uniqid from "uniqid";
 
 const FormInput = () => {
   const [addMapItem] = useAddMapItemMutation();
+
   const {
     register,
     reset,
@@ -27,7 +28,7 @@ const FormInput = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  let items;
+  let items = [];
 
   if (mapItems) {
     const { entities } = mapItems;
@@ -36,15 +37,18 @@ const FormInput = () => {
 
   const onSubmit = async (data) => {
     try {
+      let id = uniqid.process();
+
       const { message } = await addMapItem({
-        id: uniqid.process(),
-        source: items ? data.source : uniqid.process("1-"),
-        target: uniqid.process("2-"),
+        id,
+        source: items.length > 0 ? data.source : uniqid.process("1-"),
+        target: id,
         x: Number(data.positionX),
         y: Number(data.positionY),
         label: data.label,
-        line: uniqid.process("el-"),
+        lineId: uniqid.process("el-"),
       }).unwrap();
+      reset();
 
       toast.success(`${message}`, {
         position: "top-right",
@@ -57,7 +61,9 @@ const FormInput = () => {
         theme: "light",
       });
 
-      reset();
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
     } catch (error) {
       let msg =
         error.message ||

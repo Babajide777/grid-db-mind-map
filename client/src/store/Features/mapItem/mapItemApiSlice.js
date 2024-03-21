@@ -33,7 +33,8 @@ export const mapItemApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { ...credentials },
         validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError;
+          console.log({ response });
+          return response.status === 201 && !result.isError;
         },
       }),
       invalidatesTags: [{ type: "mapItems", id: "LIST" }],
