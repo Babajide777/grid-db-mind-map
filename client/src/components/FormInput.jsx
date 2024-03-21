@@ -1,30 +1,50 @@
-import React, { useState } from "react"
-import { Box } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
-import { Details } from "./data"
-import FormDetails from "./FormDetails"
-import { useForm } from "react-hook-form"
-import { useAddMapItemMutation } from "../store/Features/mapItem/mapItemApiSlice"
-import { toast } from "react-toastify"
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { Details } from "./data";
+import FormDetails from "./FormDetails";
+import { useForm } from "react-hook-form";
+import {
+  useAddMapItemMutation,
+  useGetAllMapItemsQuery,
+} from "../store/Features/mapItem/mapItemApiSlice";
+import { toast } from "react-toastify";
+import uniqid from "uniqid";
 
 const FormInput = () => {
-  const [addMapItem] = useAddMapItemMutation()
+  const [addMapItem] = useAddMapItemMutation();
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors }
-  } = useForm()
-  const onSubmit = async data => {
+    formState: { errors },
+  } = useForm();
+
+  const { data: mapItems } = useGetAllMapItemsQuery("mapItems", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+
+  let items;
+
+  if (mapItems) {
+    const { entities } = mapItems;
+    items = Object.values(entities);
+  }
+
+  const onSubmit = async (data) => {
     try {
       const { message } = await addMapItem({
-        source: data.source,
-        target: data.target,
+        id: uniqid.process(),
+        source: items ? data.source : uniqid.process("1-"),
+        target: uniqid.process("2-"),
         x: Number(data.positionX),
         y: Number(data.positionY),
-        label: data.label
-      }).unwrap()
+        label: data.label,
+        line: uniqid.process("el-"),
+      }).unwrap();
 
       toast.success(`${message}`, {
         position: "top-right",
@@ -34,15 +54,15 @@ const FormInput = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light"
-      })
+        theme: "light",
+      });
 
-      reset()
+      reset();
     } catch (error) {
       let msg =
         error.message ||
         (error.data && error.data.message) ||
-        "An error occurred"
+        "An error occurred";
       toast.error(`${msg}`, {
         position: "top-right",
         autoClose: 5000,
@@ -51,10 +71,10 @@ const FormInput = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light"
-      })
+        theme: "light",
+      });
     }
-  }
+  };
   return (
     <Box
       display="flex"
@@ -66,7 +86,7 @@ const FormInput = () => {
         right: "0px",
         background: "white",
         height: { xs: "400px" },
-        width: { xs: "70%", md: "20%" }
+        width: { xs: "70%", md: "20%" },
       }}
     >
       <Typography variant="h6">Enter a new idea</Typography>
@@ -96,14 +116,14 @@ const FormInput = () => {
             width: "80%",
             py: "6px",
             mt: "20px",
-            textTransform: "lowercase"
+            textTransform: "lowercase",
           }}
         >
           Continue
         </Button>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default FormInput
+export default FormInput;
