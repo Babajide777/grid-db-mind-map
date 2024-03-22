@@ -227,7 +227,7 @@ function CustomNodes({ data, isConnectable }) {
               try {
                 const res = await deleteMapItem({ id }).unwrap();
 
-                toast.success(`${res.data.message}`, {
+                toast.success(`${res.message}`, {
                   position: "top-right",
                   autoClose: 5000,
                   hideProgressBar: false,
