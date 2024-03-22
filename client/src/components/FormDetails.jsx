@@ -1,7 +1,7 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { Typography, TextField, Box } from "@mui/material";
-import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlice";
+import React from "react"
+import { useForm } from "react-hook-form"
+import { Typography, TextField, Box } from "@mui/material"
+import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlice"
 
 const FormDetails = ({
   name,
@@ -9,19 +9,19 @@ const FormDetails = ({
   register,
   errorParams,
   inputType,
-  initialNodes,
+  initialNodes
 }) => {
   const { data } = useGetAllMapItemsQuery("mapItems", {
     pollingInterval: 60000,
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
+    refetchOnMountOrArgChange: true
+  })
 
-  let items = [];
+  let items = []
 
   if (data) {
-    const { entities } = data;
-    items = Object.values(entities);
+    const { entities } = data
+    items = Object.values(entities)
   }
 
   return (
@@ -30,18 +30,22 @@ const FormDetails = ({
         width: "80%",
         // py: "6px"
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column"
       }}
     >
       <Typography variant="p" sx={{ fontSize: "12px" }}>
         {name}
       </Typography>
       {inputType === "select" ? (
-        <select {...register(name, errorParams)} defaultValue="">
+        <select
+          {...register(name, errorParams)}
+          defaultValue=""
+          disabled={items.length === 0}
+        >
           <option value="" disabled hidden>
             Select a source
           </option>
-          {items.map((node) => (
+          {items.map(node => (
             <option key={node.id} value={node.id}>
               {node.label}
             </option>
@@ -56,8 +60,8 @@ const FormDetails = ({
           sx={{
             "& .MuiOutlinedInput-input": {
               color: "#aaa",
-              height: 10,
-            },
+              height: 10
+            }
           }}
           {...register(name, errorParams)}
         />
@@ -71,7 +75,7 @@ const FormDetails = ({
         </Typography>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default FormDetails;
+export default FormDetails

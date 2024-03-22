@@ -7,7 +7,8 @@ import ReactFlow, {
   useEdgesState,
   addEdge
 } from "reactflow"
-import { TextField, Box } from "@mui/material"
+import { useForm } from "react-hook-form"
+import { TextField, Box, Button, Typography } from "@mui/material"
 import Modal from "@mui/material/Modal"
 import "reactflow/dist/style.css"
 import { Handle, Position } from "reactflow"
@@ -35,7 +36,7 @@ export default function MainMindMap() {
     source: "1",
     x: "200",
     y: "300",
-    label: "First",
+    label: "Software developer",
     target: "2",
     lineId: "el-1"
   }
@@ -147,6 +148,13 @@ function CustomNodes({ data, isConnectable }) {
   const [deleteMapItem] = useDeleteMapItemMutation()
   const [editMapItem] = useEditMapItemMutation()
 
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
+
   const [open, setOpen] = useState(false)
   const handleEdit = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -162,7 +170,7 @@ function CustomNodes({ data, isConnectable }) {
       sx={{
         border: "2px solid black",
         width: "150px",
-        background: "white",
+        background: "#8bc34a",
         borderRadius: "10px"
       }}
     >
@@ -179,20 +187,63 @@ function CustomNodes({ data, isConnectable }) {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
+            <label htmlFor="">source</label>
+            <select
+              defaultValue={source}
+              style={{ width: "100%", height: "40px" }}
+            >
+              <option></option>
+            </select>
+            <label htmlFor="">positionX</label>
             <TextField
               type="text"
-              style={{ width: "100%", position: "relative" }}
+              name="x"
+              defaultValue={x}
+              style={{ width: "100%" }}
+              {...register("x", {
+                required: "x is required.",
+                pattern: { value: /^\d+$/, message: "x must be numeric." }
+              })}
             />
+            {errors.x && <p className="errorMsg">{errors.x.message}</p>}
+            <label htmlFor="">positionY</label>
+            <TextField
+              defaultValue={y}
+              type="text"
+              name="y"
+              style={{ width: "100%" }}
+              {...register("y", {
+                required: "y is required.",
+                pattern: { value: /^\d+$/, message: "y must be numeric." }
+              })}
+            />
+            {errors.y && <p className="errorMsg">{errors.y.message}</p>}
+            <label htmlFor="">label</label>
+            <TextField
+              defaultValue={label}
+              type="text"
+              name="label"
+              style={{ width: "100%", position: "relative" }}
+              {...register("label", {
+                required: "label is required.",
+                pattern: {
+                  value: /\b[A-Za-z]+\b/,
+                  message: "label must be alphabetic."
+                }
+              })}
+            />
+            {errors.label && <p className="errorMsg">{errors.label.message}</p>}
 
             {/* build form here. They can change source, x,y, and label. Source will be a drop down */}
-            <GiCheckMark
+            <Button
+              variant="contained"
+              color="primary"
               style={{
-                position: "absolute",
-                right: "15px",
-                top: "25px",
-                cursor: "pointer"
+                cursor: "pointer",
+                width: "100%"
               }}
-              color="black"
+              sx={{ marginTop: "20px" }}
+              // color="black"
               size="1rem"
               onClick={async e => {
                 try {
@@ -210,6 +261,7 @@ function CustomNodes({ data, isConnectable }) {
                   }).unwrap()
 
                   setOpen(false)
+                  reset()
                   toast.success(`${res.data.message}`, {
                     position: "top-right",
                     autoClose: 5000,
@@ -226,13 +278,15 @@ function CustomNodes({ data, isConnectable }) {
                   }, 5000)
                 } catch (error) {}
               }}
-            />
+            >
+              Update !
+            </Button>
           </Box>
         </Modal>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
+            // justifyContent: "space-around",
             alignItems: "center",
             width: "100%",
             height: "100%"
@@ -240,16 +294,21 @@ function CustomNodes({ data, isConnectable }) {
         >
           <FiEdit
             color="black"
-            size="0.7rem"
+            size="1rem"
             onClick={handleEdit}
             style={{
-              cursor: "pointer"
+              cursor: "pointer",
+              marginLeft: "10px"
             }}
           />
-          <p>{label}</p>
+          <Typography sx={{ textAlign: "center" }}>{label}</Typography>
           <MdDeleteOutline
+            style={{
+              cursor: "pointer",
+              marginRight: "10px"
+            }}
             color="black"
-            size="0.7rem"
+            size="1rem"
             onClick={async () => {
               try {
                 const res = await deleteMapItem({ id }).unwrap()
@@ -284,9 +343,6 @@ function CustomNodes({ data, isConnectable }) {
                   theme: "light"
                 })
               }
-            }}
-            style={{
-              cursor: "pointer"
             }}
           />
         </Box>
