@@ -40,10 +40,22 @@ export const mapItemApiSlice = apiSlice.injectEndpoints({
     }),
     deleteMapItem: builder.mutation({
       query: ({ id }) => ({
-        url: `/delete-map-item/${id}`,
+        url: `delete-map-item/${id}`,
         method: "DELETE",
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError;
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "mapItems", id: arg.id },
+      ],
+    }),
+    editMapItem: builder.mutation({
+      query: (data) => ({
+        url: `edit-map-item/${data.id}`,
+        method: "PUT",
+        body: {
+          ...data,
         },
       }),
       invalidatesTags: (result, error, arg) => [
