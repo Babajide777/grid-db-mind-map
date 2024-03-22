@@ -29,40 +29,50 @@ export default function MainMindMap() {
     refetchOnMountOrArgChange: true,
   });
 
-  // const initialNodes = [
-  //   {
-  //     id: "1",
-  //     position: { x: 50, y: 0 },
-  //     data: { label: "First" },
-  //     type: "customNodes",
-  //   },
-  //   {
-  //     id: "2",
-  //     position: { x: 0, y: 100 },
-  //     data: { label: "Second" },
-  //     type: "customNodes",
-  //   },
-  //   {
-  //     id: "3",
-  //     position: { x: 100, y: 200 },
-  //     data: { label: "Third" },
-  //     type: "customNodes",
-  //   },
-  //   {
-  //     id: "4",
-  //     position: { x: 100, y: 300 },
-  //     data: { label: "Fourth" },
-  //     type: "customNodes",
-  //   },
-  // ];
-  // const initialEdges = [
-  //   { id: "e1-2", source: "1", target: "4" },
-  //   { id: "e1-3", source: "1", target: "3" },
-  //   { id: "e1-4", source: "2", target: "4" },
-  // ];
+  let item = {
+    id: "1",
+    source: "1",
+    x: "200",
+    y: "300",
+    label: "First",
+    target: "2",
+    lineId: "el-1",
+  };
 
-  let initialNodes = [];
-  let initialEdges = [];
+  const initialNodes = [
+    {
+      id: "1",
+      position: { x: 50, y: 0 },
+      data: { item },
+      type: "customNodes",
+    },
+    {
+      id: "2",
+      position: { x: 0, y: 100 },
+      data: { item },
+      type: "customNodes",
+    },
+    {
+      id: "3",
+      position: { x: 100, y: 200 },
+      data: { item },
+      type: "customNodes",
+    },
+    {
+      id: "4",
+      position: { x: 100, y: 300 },
+      data: { item },
+      type: "customNodes",
+    },
+  ];
+  const initialEdges = [
+    { id: "e1-2", source: "1", target: "4" },
+    { id: "e1-3", source: "1", target: "3" },
+    { id: "e1-4", source: "2", target: "4" },
+  ];
+
+  // let initialNodes = [];
+  // let initialEdges = [];
 
   if (data) {
     const { entities } = data;
