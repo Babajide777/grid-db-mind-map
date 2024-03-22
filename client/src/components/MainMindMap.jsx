@@ -1,33 +1,34 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react"
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
   useNodesState,
   useEdgesState,
-  addEdge,
-} from "reactflow";
-import { TextField, Box } from "@mui/material";
-import "reactflow/dist/style.css";
-import { Handle, Position } from "reactflow";
-import { MdDeleteOutline } from "react-icons/md";
-import { FiEdit } from "react-icons/fi";
-import { GiCheckMark } from "react-icons/gi";
+  addEdge
+} from "reactflow"
+import { TextField, Box } from "@mui/material"
+import Modal from "@mui/material/Modal"
+import "reactflow/dist/style.css"
+import { Handle, Position } from "reactflow"
+import { MdDeleteOutline } from "react-icons/md"
+import { FiEdit } from "react-icons/fi"
+import { GiCheckMark } from "react-icons/gi"
 import {
   useDeleteMapItemMutation,
   useEditMapItemMutation,
-  useGetAllMapItemsQuery,
-} from "../store/Features/mapItem/mapItemApiSlice";
-import { toast } from "react-toastify";
+  useGetAllMapItemsQuery
+} from "../store/Features/mapItem/mapItemApiSlice"
+import { toast } from "react-toastify"
 
-const handleStyle = { left: 10 };
+const handleStyle = { left: 10 }
 
 export default function MainMindMap() {
   const { data } = useGetAllMapItemsQuery("mapItems", {
     pollingInterval: 60000,
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
+    refetchOnMountOrArgChange: true
+  })
 
   // const initialNodes = [
   //   {
@@ -61,39 +62,39 @@ export default function MainMindMap() {
   //   { id: "e1-4", source: "2", target: "4" },
   // ];
 
-  let initialNodes = [];
-  let initialEdges = [];
+  let initialNodes = []
+  let initialEdges = []
 
   if (data) {
-    const { entities } = data;
-    const mapItems = Object.values(entities);
+    const { entities } = data
+    const mapItems = Object.values(entities)
 
-    const theInitialNodes = mapItems.map((item) => {
+    const theInitialNodes = mapItems.map(item => {
       return {
         id: item.id,
         position: { x: item.x, y: item.y },
         data: { item: item },
-        type: "customNodes",
-      };
-    });
+        type: "customNodes"
+      }
+    })
 
-    const theInitialEdges = mapItems.map((item) => {
-      return { id: item.lineId, source: item.source, target: item.target };
-    });
+    const theInitialEdges = mapItems.map(item => {
+      return { id: item.lineId, source: item.source, target: item.target }
+    })
 
-    initialNodes = [...theInitialNodes];
-    initialEdges = [...theInitialEdges];
+    initialNodes = [...theInitialNodes]
+    initialEdges = [...theInitialEdges]
   }
 
-  const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
+  const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), [])
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    params => setEdges(eds => addEdge(params, eds)),
     [setEdges]
-  );
+  )
 
   return (
     <div
@@ -114,26 +115,37 @@ export default function MainMindMap() {
         <Background />
       </ReactFlow>
     </div>
-  );
+  )
+}
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4
 }
 
 function CustomNodes({ data, isConnectable }) {
-  const [show, setShow] = useState(false);
-  const { item } = data;
-  const { id, source, x, y, label, target, lineId } = item;
+  const { item } = data
+  const { id, source, x, y, label, target, lineId } = item
 
-  const [deleteMapItem] = useDeleteMapItemMutation();
-  const [editMapItem] = useEditMapItemMutation();
+  const [deleteMapItem] = useDeleteMapItemMutation()
+  const [editMapItem] = useEditMapItemMutation()
 
-  const handleEdit = useCallback(() => {
-    setShow(!show);
-  }, [show]);
+  const [open, setOpen] = useState(false)
+  const handleEdit = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
-  const handleCheck = useCallback(() => {}, []);
+  const handleCheck = useCallback(() => {}, [])
 
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
+  const onChange = useCallback(evt => {
+    console.log(evt.target.value)
+  }, [])
 
   return (
     <Box
@@ -141,7 +153,7 @@ function CustomNodes({ data, isConnectable }) {
         border: "2px solid black",
         width: "150px",
         background: "white",
-        borderRadius: "10px",
+        borderRadius: "10px"
       }}
     >
       <Handle
@@ -150,8 +162,13 @@ function CustomNodes({ data, isConnectable }) {
         isConnectable={isConnectable}
       />
       <Box sx={{ width: "100%" }}>
-        {show && (
-          <Box>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
             <TextField
               type="text"
               style={{ width: "100%", position: "relative" }}
@@ -163,13 +180,13 @@ function CustomNodes({ data, isConnectable }) {
                 position: "absolute",
                 right: "15px",
                 top: "25px",
-                cursor: "pointer",
+                cursor: "pointer"
               }}
               color="black"
               size="1rem"
-              onClick={async (e) => {
+              onClick={async e => {
                 try {
-                  const newLabel = e.target.value;
+                  const newLabel = e.target.value
                   // handleEditNode(item.id, { label: newLabel })
 
                   const res = await editMapItem({
@@ -179,10 +196,10 @@ function CustomNodes({ data, isConnectable }) {
                     x: Number(x),
                     y: Number(y),
                     label,
-                    lineId,
-                  }).unwrap();
+                    lineId
+                  }).unwrap()
 
-                  setShow(false);
+                  setOpen(false)
                   toast.success(`${res.data.message}`, {
                     position: "top-right",
                     autoClose: 5000,
@@ -191,24 +208,24 @@ function CustomNodes({ data, isConnectable }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "light",
-                  });
+                    theme: "light"
+                  })
 
                   setTimeout(() => {
-                    window.location.reload();
-                  }, 5000);
+                    window.location.reload()
+                  }, 5000)
                 } catch (error) {}
               }}
             />
           </Box>
-        )}
+        </Modal>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
             width: "100%",
-            height: "100%",
+            height: "100%"
           }}
         >
           <FiEdit
@@ -216,7 +233,7 @@ function CustomNodes({ data, isConnectable }) {
             size="0.7rem"
             onClick={handleEdit}
             style={{
-              cursor: "pointer",
+              cursor: "pointer"
             }}
           />
           <p>{label}</p>
@@ -225,7 +242,7 @@ function CustomNodes({ data, isConnectable }) {
             size="0.7rem"
             onClick={async () => {
               try {
-                const res = await deleteMapItem({ id }).unwrap();
+                const res = await deleteMapItem({ id }).unwrap()
 
                 toast.success(`${res.data.message}`, {
                   position: "top-right",
@@ -235,17 +252,17 @@ function CustomNodes({ data, isConnectable }) {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "light",
-                });
+                  theme: "light"
+                })
 
                 setTimeout(() => {
-                  window.location.reload();
-                }, 5000);
+                  window.location.reload()
+                }, 5000)
               } catch (error) {
                 let msg =
                   error.message ||
                   (error.data && error.data.message) ||
-                  "An error occurred";
+                  "An error occurred"
                 toast.error(`${msg}`, {
                   position: "top-right",
                   autoClose: 5000,
@@ -254,12 +271,12 @@ function CustomNodes({ data, isConnectable }) {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "light",
-                });
+                  theme: "light"
+                })
               }
             }}
             style={{
-              cursor: "pointer",
+              cursor: "pointer"
             }}
           />
         </Box>
@@ -278,5 +295,5 @@ function CustomNodes({ data, isConnectable }) {
         isConnectable={isConnectable}
       />
     </Box>
-  );
+  )
 }
