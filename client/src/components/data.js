@@ -1,27 +1,18 @@
 const Details = [
   {
-    name: "source",
-    errorMessage: "Please enter a valid source.",
-    errorParams: {
-      required: "source is required.",
-      pattern: {
-        value: /^.*$/,
-        message: "Source must have an alphanumeric value."
-      }
-    }
+    inputType: "select",
+    name: "source"
+    // errorMessage: "Please enter a valid source.",
+    // errorParams: {
+    //   required: "source is required.",
+    //   pattern: {
+    //     value: /^.*$/,
+    //     message: "Source must have an alphanumeric value."
+    //   }
+    // }
   },
   {
-    name: "target",
-    errorMessage: "Please enter a valid target.",
-    errorParams: {
-      required: "target is required.",
-      pattern: {
-        value: /^.*$/,
-        message: "Target must have an alphanumeric value."
-      }
-    }
-  },
-  {
+    inputType: "text",
     name: "positionX",
     errorMessage: "Please enter a valid x.",
     errorParams: {
@@ -30,6 +21,7 @@ const Details = [
     }
   },
   {
+    inputType: "text",
     name: "positionY",
     errorMessage: "Please enter a valid y.",
     errorParams: {
@@ -38,6 +30,7 @@ const Details = [
     }
   },
   {
+    inputType: "text",
     name: "label",
     errorMessage: "Please enter a valid label.",
     errorParams: {

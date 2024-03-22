@@ -18,62 +18,31 @@ import {
   useAddMapItemMutation
 } from "../store/Features/mapItem/mapItemApiSlice"
 
-// const initialNodes = [
-//   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
-//   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
-//   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
-//   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } },
-// ];
-// const initialEdges = [
-//   { id: "e1-2", source: "1", target: "4" },
-//   { id: "e1-3", source: "1", target: "3" },
-//   { id: "e1-4", source: "2", target: "4" },
-// ];
-
-const handleStyle = { left: 10 }
-
 export default function MainMindMap() {
   const { data } = useGetAllMapItemsQuery("mapItems", {
-    pollingInterval: 1000,
+    pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true
   })
 
-  const initialNodes = [
-    {
-      id: "1",
-      position: { x: 50, y: 0 },
-      data: { label: "First" },
-      type: "customNodes"
-    },
-    {
-      id: "2",
-      position: { x: 0, y: 100 },
-      data: { label: "Second" },
-      type: "customNodes"
-    },
-    {
-      id: "3",
-      position: { x: 100, y: 200 },
-      data: { label: "Third" },
-      type: "customNodes"
-    },
-    {
-      id: "4",
-      position: { x: 100, y: 300 },
-      data: { label: "Fourth" },
-      type: "customNodes"
-    }
-  ]
-  const initialEdges = [
-    { id: "e1-2", source: "1", target: "4" },
-    { id: "e1-3", source: "1", target: "3" },
-    { id: "e1-4", source: "2", target: "4" }
-  ]
+  // const initialNodes = [
+  //   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
+  //   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
+  //   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
+  //   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } }
+  // ]
+  // const initialEdges = [
+  //   { id: "e1-2", source: "1", target: "4" },
+  //   { id: "e1-3", source: "1", target: "3" },
+  //   { id: "e1-4", source: "2", target: "4" }
+  // ]
+  let initialNodes = []
+  let initialEdges = []
 
   if (data) {
     const { entities } = data
     const mapItems = Object.values(entities)
+    console.log({ mapItems })
 
     const theInitialNodes = mapItems.map(item => {
       return {
@@ -128,14 +97,17 @@ export default function MainMindMap() {
   )
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div
+      sx={{ display: "flex", position: "relative" }}
+      style={{ width: "100vw", height: "100vh" }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes}
+        style={{ width: "100vw" }}
       >
         <MiniMap />
         <Controls />

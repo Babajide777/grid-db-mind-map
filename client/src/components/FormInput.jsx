@@ -5,26 +5,50 @@ import Button from "@mui/material/Button"
 import { Details } from "./data"
 import FormDetails from "./FormDetails"
 import { useForm } from "react-hook-form"
-import { useAddMapItemMutation } from "../store/Features/mapItem/mapItemApiSlice"
+import {
+  useAddMapItemMutation,
+  useGetAllMapItemsQuery
+} from "../store/Features/mapItem/mapItemApiSlice"
 import { toast } from "react-toastify"
+import uniqid from "uniqid"
 
 const FormInput = () => {
   const [addMapItem] = useAddMapItemMutation()
+
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors }
   } = useForm()
+
+  const { data: mapItems } = useGetAllMapItemsQuery("mapItems", {
+    pollingInterval: 60000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true
+  })
+
+  let items = []
+
+  if (mapItems) {
+    const { entities } = mapItems
+    items = Object.values(entities)
+  }
+
   const onSubmit = async data => {
     try {
+      let id = uniqid.process()
+
       const { message } = await addMapItem({
-        source: data.source,
-        target: data.target,
+        id,
+        source: items.length > 0 ? data.source : uniqid.process("1-"),
+        target: id,
         x: Number(data.positionX),
         y: Number(data.positionY),
-        label: data.label
+        label: data.label,
+        lineId: uniqid.process("el-")
       }).unwrap()
+      reset()
 
       toast.success(`${message}`, {
         position: "top-right",
@@ -38,6 +62,9 @@ const FormInput = () => {
       })
 
       reset()
+      setTimeout(() => {
+        window.location.reload()
+      }, 5000)
     } catch (error) {
       let msg =
         error.message ||
@@ -62,8 +89,10 @@ const FormInput = () => {
       alignItems="center"
       justifyContent="center"
       sx={{
+        position: "absolute",
+        right: "0px",
         background: "white",
-        height: { xs: "460px" },
+        height: { xs: "400px" },
         width: { xs: "70%", md: "20%" }
       }}
     >
