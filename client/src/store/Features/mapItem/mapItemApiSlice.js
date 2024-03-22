@@ -38,11 +38,26 @@ export const mapItemApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "mapItems", id: "LIST" }],
     }),
+    deleteMapItem: builder.mutation({
+      query: ({ id }) => ({
+        url: `/delete-map-item/${id}`,
+        method: "DELETE",
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "mapItems", id: arg.id },
+      ],
+    }),
   }),
 });
 
-export const { useGetAllMapItemsQuery, useAddMapItemMutation } =
-  mapItemApiSlice;
+export const {
+  useGetAllMapItemsQuery,
+  useAddMapItemMutation,
+  useDeleteMapItemMutation,
+} = mapItemApiSlice;
 
 export const selectMapItemsResult =
   mapItemApiSlice.endpoints.getAllMapItems.select();

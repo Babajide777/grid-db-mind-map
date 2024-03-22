@@ -7,25 +7,17 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
 } from "reactflow";
-import { Typography, TextField, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import "reactflow/dist/style.css";
 import { Handle, Position } from "reactflow";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { GiCheckMark } from "react-icons/gi";
-import { useGetAllMapItemsQuery } from "../store/Features/mapItem/mapItemApiSlice";
-
-// const initialNodes = [
-//   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
-//   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
-//   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
-//   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } },
-// ];
-// const initialEdges = [
-//   { id: "e1-2", source: "1", target: "4" },
-//   { id: "e1-3", source: "1", target: "3" },
-//   { id: "e1-4", source: "2", target: "4" },
-// ];
+import {
+  useDeleteMapItemMutation,
+  useGetAllMapItemsQuery,
+} from "../store/Features/mapItem/mapItemApiSlice";
+import { toast } from "react-toastify";
 
 const handleStyle = { left: 10 };
 
@@ -79,7 +71,7 @@ export default function MainMindMap() {
       return {
         id: item.id,
         position: { x: item.x, y: item.y },
-        data: { label: item.label },
+        data: { item: item },
         type: "customNodes",
       };
     });
@@ -93,31 +85,6 @@ export default function MainMindMap() {
   }
 
   const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
-  // const initialNodes = [
-  //   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },
-  //   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
-  //   { id: "3", position: { x: 100, y: 200 }, data: { label: "Third" } },
-  //   { id: "4", position: { x: 100, y: 300 }, data: { label: "Fourth" } },
-  // ];
-  // const initialEdges = [
-  //   { id: "e1-2", source: "1", target: "4" },
-  //   { id: "e1-3", source: "1", target: "3" },
-  //   { id: "e1-4", source: "2", target: "4" },
-  // ];
-  // const initialNodes = [
-  //   { id: "1", position: { x: 50, y: 0 }, data: { label: "First" } },in
-  //   { id: "2", position: { x: 0, y: 100 }, data: { label: "Second" } },
-  //   { id: "3", position: { x: 0, y: 200 }, data: { label: "Third" } },
-  //   { id: "4", position: { x: 300, y: 200 }, data: { label: "Fourth" } },
-  //   { id: "5", position: { x: 500, y: 400 }, data: { label: "Fivth" } },
-  // ];
-  // const initialEdges = [
-  //   { id: "e1-1", source: "0", target: "0" },
-  //   { id: "e1-2", source: "1", target: "2" },
-  //   { id: "e1-3", source: "2", target: "3" },
-  //   { id: "e1-4", source: "2", target: "4" },
-  //   { id: "e1-5", source: "3", target: "5" },
-  // ];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -151,21 +118,20 @@ export default function MainMindMap() {
 
 function CustomNodes({ data, isConnectable }) {
   const [show, setShow] = useState(false);
-  const { label } = data; // Destructure label from the data prop
+  const { item } = data;
 
-  // Now you can use the label variable wherever you need it in your component
-  console.log(label);
+  const [deleteMapItem] = useDeleteMapItemMutation();
+
   const handleEdit = useCallback(() => {
     setShow(!show);
   }, [show]);
 
-  const handleDelete = useCallback(() => {
-    // Implement delete functionality here
+  const handleDelete = useCallback((id) => {
+    console.log("here");
+    console.log(id);
   }, []);
 
-  const handleCheck = useCallback(() => {
-    // Implement check functionality here
-  }, []);
+  const handleCheck = useCallback(() => {}, []);
 
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
@@ -220,17 +186,51 @@ function CustomNodes({ data, isConnectable }) {
         >
           <FiEdit
             color="black"
-            size="1rem"
+            size="0.7rem"
             onClick={handleEdit}
             style={{
               cursor: "pointer",
             }}
           />
-          <p>{label}</p>
+          <p>{item.label}</p>
           <MdDeleteOutline
             color="black"
-            size="1rem"
-            // onClick={handleDeleteNode}
+            size="0.7rem"
+            onClick={async () => {
+              try {
+                const res = await deleteMapItem({ id: item.id });
+
+                toast.success(`${res.data.message}`, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+
+                setTimeout(() => {
+                  window.location.reload();
+                }, 5000);
+              } catch (error) {
+                let msg =
+                  error.message ||
+                  (error.data && error.data.message) ||
+                  "An error occurred";
+                toast.error(`${msg}`, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+              }
+            }}
             style={{
               cursor: "pointer",
             }}
