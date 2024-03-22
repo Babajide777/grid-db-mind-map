@@ -35,7 +35,10 @@ const Details = [
     errorMessage: "Please enter a valid label.",
     errorParams: {
       required: "label is required.",
-      pattern: { value: /^[a-zA-Z]+$/g, message: "label must be alphabets." },
+      pattern: {
+        value: "\\b[A-Za-z]+\\b",
+        message: "label must be alphabets.",
+      },
     },
   },
 ];
