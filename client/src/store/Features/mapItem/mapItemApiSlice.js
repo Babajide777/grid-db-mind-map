@@ -57,6 +57,9 @@ export const mapItemApiSlice = apiSlice.injectEndpoints({
         body: {
           ...data,
         },
+        validateStatus: (response, result) => {
+          return response.status === 200 && !result.isError;
+        },
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "mapItems", id: arg.id },
@@ -69,6 +72,7 @@ export const {
   useGetAllMapItemsQuery,
   useAddMapItemMutation,
   useDeleteMapItemMutation,
+  useEditMapItemMutation,
 } = mapItemApiSlice;
 
 export const selectMapItemsResult =

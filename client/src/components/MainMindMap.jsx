@@ -15,6 +15,7 @@ import { FiEdit } from "react-icons/fi";
 import { GiCheckMark } from "react-icons/gi";
 import {
   useDeleteMapItemMutation,
+  useEditMapItemMutation,
   useGetAllMapItemsQuery,
 } from "../store/Features/mapItem/mapItemApiSlice";
 import { toast } from "react-toastify";
@@ -119,17 +120,14 @@ export default function MainMindMap() {
 function CustomNodes({ data, isConnectable }) {
   const [show, setShow] = useState(false);
   const { item } = data;
+  const { id, source, x, y, label, target, lineId } = item;
 
   const [deleteMapItem] = useDeleteMapItemMutation();
+  const [editMapItem] = useEditMapItemMutation();
 
   const handleEdit = useCallback(() => {
     setShow(!show);
   }, [show]);
-
-  const handleDelete = useCallback((id) => {
-    console.log("here");
-    console.log(id);
-  }, []);
 
   const handleCheck = useCallback(() => {}, []);
 
@@ -158,6 +156,8 @@ function CustomNodes({ data, isConnectable }) {
               type="text"
               style={{ width: "100%", position: "relative" }}
             />
+
+            {/* build form here. They can change source, x,y, and label. Source will be a drop down */}
             <GiCheckMark
               style={{
                 position: "absolute",
@@ -167,10 +167,37 @@ function CustomNodes({ data, isConnectable }) {
               }}
               color="black"
               size="1rem"
-              onClick={(e) => {
-                const newLabel = e.target.value;
-                // handleEditNode(item.id, { label: newLabel })
-                setShow(false);
+              onClick={async (e) => {
+                try {
+                  const newLabel = e.target.value;
+                  // handleEditNode(item.id, { label: newLabel })
+
+                  const res = await editMapItem({
+                    id,
+                    source,
+                    target,
+                    x: Number(x),
+                    y: Number(y),
+                    label,
+                    lineId,
+                  }).unwrap();
+
+                  setShow(false);
+                  toast.success(`${res.data.message}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 5000);
+                } catch (error) {}
               }}
             />
           </Box>
@@ -192,13 +219,13 @@ function CustomNodes({ data, isConnectable }) {
               cursor: "pointer",
             }}
           />
-          <p>{item.label}</p>
+          <p>{label}</p>
           <MdDeleteOutline
             color="black"
             size="0.7rem"
             onClick={async () => {
               try {
-                const res = await deleteMapItem({ id: item.id });
+                const res = await deleteMapItem({ id }).unwrap();
 
                 toast.success(`${res.data.message}`, {
                   position: "top-right",
