@@ -39,7 +39,7 @@ export default function MainMindMap() {
     lineId: "el-1",
   };
 
-  const initialNodes = [
+  let initialNodes = [
     {
       id: "1",
       position: { x: 50, y: 0 },
@@ -65,7 +65,7 @@ export default function MainMindMap() {
       type: "customNodes",
     },
   ];
-  const initialEdges = [
+  let initialEdges = [
     { id: "e1-2", source: "1", target: "4" },
     { id: "e1-3", source: "1", target: "3" },
     { id: "e1-4", source: "2", target: "4" },
@@ -74,31 +74,42 @@ export default function MainMindMap() {
   // let initialNodes = [];
   // let initialEdges = [];
 
-  if (data) {
-    const { entities } = data;
-    const mapItems = Object.values(entities);
-
-    const theInitialNodes = mapItems.map((item) => {
-      return {
-        id: item.id,
-        position: { x: item.x, y: item.y },
-        data: { item: item },
-        type: "customNodes",
-      };
-    });
-
-    const theInitialEdges = mapItems.map((item) => {
-      return { id: item.lineId, source: item.source, target: item.target };
-    });
-
-    initialNodes = [...theInitialNodes];
-    initialEdges = [...theInitialEdges];
-  }
-
   const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const computeNodes = useCallback(() => {
+    if (data) {
+      const { entities } = data;
+      const mapItems = Object.values(entities);
+
+      const theInitialNodes = mapItems.map((item) => {
+        return {
+          id: item.id,
+          position: { x: item.x, y: item.y },
+          data: { item: item },
+          type: "customNodes",
+        };
+      });
+
+      initialNodes = [...theInitialNodes];
+
+      setNodes(theInitialNodes);
+    }
+  }, [setNodes]);
+
+  const computeEdges = useCallback(() => {
+    const { entities } = data;
+    const mapItems = Object.values(entities);
+
+    const theInitialEdges = mapItems.map((item) => {
+      return { id: item.lineId, source: item.source, target: item.target };
+    });
+    initialEdges = [...theInitialEdges];
+
+    setEdges(theInitialEdges);
+  }, [setEdges]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -114,8 +125,8 @@ export default function MainMindMap() {
         nodes={nodes}
         edges={edges}
         onConnect={onConnect}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={computeNodes}
+        onEdgesChange={computeEdges}
         style={{ width: "100vw" }}
         nodeTypes={nodeTypes}
       >
