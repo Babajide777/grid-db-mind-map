@@ -1,111 +1,111 @@
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
   useNodesState,
   useEdgesState,
-  addEdge
-} from "reactflow"
-import { useForm } from "react-hook-form"
-import { TextField, Box, Button, Typography } from "@mui/material"
-import Modal from "@mui/material/Modal"
-import "reactflow/dist/style.css"
-import { Handle, Position } from "reactflow"
-import { MdDeleteOutline } from "react-icons/md"
-import { FiEdit } from "react-icons/fi"
-import { GiCheckMark } from "react-icons/gi"
+  addEdge,
+} from "reactflow";
+import { useForm } from "react-hook-form";
+import { TextField, Box, Button, Typography } from "@mui/material";
+import Modal from "@mui/material/Modal";
+import "reactflow/dist/style.css";
+import { Handle, Position } from "reactflow";
+import { MdDeleteOutline } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { GiCheckMark } from "react-icons/gi";
 import {
   useDeleteMapItemMutation,
   useEditMapItemMutation,
-  useGetAllMapItemsQuery
-} from "../store/Features/mapItem/mapItemApiSlice"
-import { toast } from "react-toastify"
+  useGetAllMapItemsQuery,
+} from "../store/Features/mapItem/mapItemApiSlice";
+import { toast } from "react-toastify";
 
-const handleStyle = { left: 10 }
+const handleStyle = { left: 10 };
 
 export default function MainMindMap() {
   const { data } = useGetAllMapItemsQuery("mapItems", {
     pollingInterval: 60000,
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true
-  })
+    refetchOnMountOrArgChange: true,
+  });
 
-  let item = {
-    id: "1",
-    source: "1",
-    x: "200",
-    y: "300",
-    label: "Software developer",
-    target: "2",
-    lineId: "el-1"
-  }
+  //   let item = {
+  //     id: "1",
+  //     source: "1",
+  //     x: "200",
+  //     y: "300",
+  //     label: "Software developer",
+  //     target: "2",
+  //     lineId: "el-1"
+  //   }
 
-  const initialNodes = [
-    {
-      id: "1",
-      position: { x: 50, y: 0 },
-      data: { item },
-      type: "customNodes"
-    },
-    {
-      id: "2",
-      position: { x: 0, y: 100 },
-      data: { item },
-      type: "customNodes"
-    },
-    {
-      id: "3",
-      position: { x: 100, y: 200 },
-      data: { item },
-      type: "customNodes"
-    },
-    {
-      id: "4",
-      position: { x: 100, y: 300 },
-      data: { item },
-      type: "customNodes"
-    }
-  ]
-  const initialEdges = [
-    { id: "e1-2", source: "1", target: "4" },
-    { id: "e1-3", source: "1", target: "3" },
-    { id: "e1-4", source: "2", target: "4" }
-  ]
+  // let initialNodes = [
+  //     {
+  //       id: "1",
+  //       position: { x: 50, y: 0 },
+  //       data: { item },
+  //       type: "customNodes"
+  //     },
+  //     {
+  //       id: "2",
+  //       position: { x: 0, y: 100 },
+  //       data: { item },
+  //       type: "customNodes"
+  //     },
+  //     {
+  //       id: "3",
+  //       position: { x: 100, y: 200 },
+  //       data: { item },
+  //       type: "customNodes"
+  //     },
+  //     {
+  //       id: "4",
+  //       position: { x: 100, y: 300 },
+  //       data: { item },
+  //       type: "customNodes"
+  //     }
+  //   ]
+  //   let initialEdges = [
+  //     { id: "e1-2", source: "1", target: "4" },
+  //     { id: "e1-3", source: "1", target: "3" },
+  //     { id: "e1-4", source: "2", target: "4" }
+  //   ]
 
-  // let initialNodes = [];
-  // let initialEdges = [];
+  let initialNodes = [];
+  let initialEdges = [];
 
   if (data) {
-    const { entities } = data
-    const mapItems = Object.values(entities)
+    const { entities } = data;
+    const mapItems = Object.values(entities);
 
-    const theInitialNodes = mapItems.map(item => {
+    const theInitialNodes = mapItems.map((item) => {
       return {
         id: item.id,
         position: { x: item.x, y: item.y },
         data: { item: item },
-        type: "customNodes"
-      }
-    })
+        type: "customNodes",
+      };
+    });
 
-    const theInitialEdges = mapItems.map(item => {
-      return { id: item.lineId, source: item.source, target: item.target }
-    })
+    const theInitialEdges = mapItems.map((item) => {
+      return { id: item.lineId, source: item.source, target: item.target };
+    });
 
-    initialNodes = [...theInitialNodes]
-    initialEdges = [...theInitialEdges]
+    initialNodes = [...theInitialNodes];
+    initialEdges = [...theInitialEdges];
   }
 
-  const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), [])
+  const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    params => setEdges(eds => addEdge(params, eds)),
+    (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
-  )
+  );
 
   return (
     <div
@@ -126,7 +126,7 @@ export default function MainMindMap() {
         <Background />
       </ReactFlow>
     </div>
-  )
+  );
 }
 
 const style = {
@@ -138,32 +138,32 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4
-}
+  p: 4,
+};
 
 function CustomNodes({ data, isConnectable }) {
-  const { item } = data
-  const { id, source, x, y, label, target, lineId } = item
+  const { item } = data;
+  const { id, source, x, y, label, target, lineId } = item;
 
-  const [deleteMapItem] = useDeleteMapItemMutation()
-  const [editMapItem] = useEditMapItemMutation()
+  const [deleteMapItem] = useDeleteMapItemMutation();
+  const [editMapItem] = useEditMapItemMutation();
 
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors }
-  } = useForm()
+    formState: { errors },
+  } = useForm();
 
-  const [open, setOpen] = useState(false)
-  const handleEdit = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const [open, setOpen] = useState(false);
+  const handleEdit = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const handleCheck = useCallback(() => {}, [])
+  const handleCheck = useCallback(() => {}, []);
 
-  const onChange = useCallback(evt => {
-    console.log(evt.target.value)
-  }, [])
+  const onChange = useCallback((evt) => {
+    console.log(evt.target.value);
+  }, []);
 
   return (
     <Box
@@ -171,7 +171,7 @@ function CustomNodes({ data, isConnectable }) {
         border: "2px solid black",
         width: "150px",
         background: "#8bc34a",
-        borderRadius: "10px"
+        borderRadius: "10px",
       }}
     >
       <Handle
@@ -202,7 +202,7 @@ function CustomNodes({ data, isConnectable }) {
               style={{ width: "100%" }}
               {...register("x", {
                 required: "x is required.",
-                pattern: { value: /^\d+$/, message: "x must be numeric." }
+                pattern: { value: /^\d+$/, message: "x must be numeric." },
               })}
             />
             {errors.x && <p className="errorMsg">{errors.x.message}</p>}
@@ -214,7 +214,7 @@ function CustomNodes({ data, isConnectable }) {
               style={{ width: "100%" }}
               {...register("y", {
                 required: "y is required.",
-                pattern: { value: /^\d+$/, message: "y must be numeric." }
+                pattern: { value: /^\d+$/, message: "y must be numeric." },
               })}
             />
             {errors.y && <p className="errorMsg">{errors.y.message}</p>}
@@ -228,8 +228,8 @@ function CustomNodes({ data, isConnectable }) {
                 required: "label is required.",
                 pattern: {
                   value: /\b[A-Za-z]+\b/,
-                  message: "label must be alphabetic."
-                }
+                  message: "label must be alphabetic.",
+                },
               })}
             />
             {errors.label && <p className="errorMsg">{errors.label.message}</p>}
@@ -240,14 +240,14 @@ function CustomNodes({ data, isConnectable }) {
               color="primary"
               style={{
                 cursor: "pointer",
-                width: "100%"
+                width: "100%",
               }}
               sx={{ marginTop: "20px" }}
               // color="black"
               size="1rem"
-              onClick={async e => {
+              onClick={async (e) => {
                 try {
-                  const newLabel = e.target.value
+                  const newLabel = e.target.value;
                   // handleEditNode(item.id, { label: newLabel })
 
                   const res = await editMapItem({
@@ -257,11 +257,11 @@ function CustomNodes({ data, isConnectable }) {
                     x: Number(x),
                     y: Number(y),
                     label,
-                    lineId
-                  }).unwrap()
+                    lineId,
+                  }).unwrap();
 
-                  setOpen(false)
-                  reset()
+                  setOpen(false);
+                  reset();
                   toast.success(`${res.data.message}`, {
                     position: "top-right",
                     autoClose: 5000,
@@ -270,12 +270,12 @@ function CustomNodes({ data, isConnectable }) {
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "light"
-                  })
+                    theme: "light",
+                  });
 
                   setTimeout(() => {
-                    window.location.reload()
-                  }, 5000)
+                    window.location.reload();
+                  }, 5000);
                 } catch (error) {}
               }}
             >
@@ -286,10 +286,10 @@ function CustomNodes({ data, isConnectable }) {
         <Box
           sx={{
             display: "flex",
-            // justifyContent: "space-around",
+            justifyContent: "space-around",
             alignItems: "center",
             width: "100%",
-            height: "100%"
+            height: "100%",
           }}
         >
           <FiEdit
@@ -298,20 +298,20 @@ function CustomNodes({ data, isConnectable }) {
             onClick={handleEdit}
             style={{
               cursor: "pointer",
-              marginLeft: "10px"
+              marginLeft: "10px",
             }}
           />
           <Typography sx={{ textAlign: "center" }}>{label}</Typography>
           <MdDeleteOutline
             style={{
               cursor: "pointer",
-              marginRight: "10px"
+              marginRight: "10px",
             }}
             color="black"
             size="1rem"
             onClick={async () => {
               try {
-                const res = await deleteMapItem({ id }).unwrap()
+                const res = await deleteMapItem({ id }).unwrap();
 
                 toast.success(`${res.message}`, {
                   position: "top-right",
@@ -321,17 +321,17 @@ function CustomNodes({ data, isConnectable }) {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "light"
-                })
+                  theme: "light",
+                });
 
                 setTimeout(() => {
-                  window.location.reload()
-                }, 5000)
+                  window.location.reload();
+                }, 5000);
               } catch (error) {
                 let msg =
                   error.message ||
                   (error.data && error.data.message) ||
-                  "An error occurred"
+                  "An error occurred";
                 toast.error(`${msg}`, {
                   position: "top-right",
                   autoClose: 5000,
@@ -340,8 +340,8 @@ function CustomNodes({ data, isConnectable }) {
                   pauseOnHover: true,
                   draggable: true,
                   progress: undefined,
-                  theme: "light"
-                })
+                  theme: "light",
+                });
               }
             }}
           />
@@ -361,5 +361,5 @@ function CustomNodes({ data, isConnectable }) {
         isConnectable={isConnectable}
       />
     </Box>
-  )
+  );
 }
