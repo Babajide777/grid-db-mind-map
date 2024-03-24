@@ -92,7 +92,7 @@ const FormInput = () => {
         right: "0px",
         background: "white",
         height: { xs: "400px" },
-        width: { xs: "70%", md: "20%" }
+        width: { xs: "40%", md: "20%" }
       }}
     >
       <Typography variant="h6" sx={{ color: "#009688" }}>
