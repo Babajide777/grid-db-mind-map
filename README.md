@@ -1,4 +1,4 @@
-### GRIDDB MEAL PLANNER APP
+### GRIDDB MIND MAP APP
 
 This application contains 2 folders: **client** and **server**
 
