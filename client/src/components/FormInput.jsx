@@ -122,8 +122,8 @@ const FormInput = () => {
           sx={{
             width: "80%",
             py: "6px",
-            mt: "20px",
-            background: "#00b0ff",
+            mt: "15px",
+            background: "#009688",
             textTransform: "capitalize"
           }}
         >

@@ -33,11 +33,12 @@ const FormDetails = ({
         flexDirection: "column"
       }}
     >
-      <Typography variant="p" sx={{ fontSize: "12px" }}>
+      <Typography variant="p" sx={{ fontSize: "12px", my: "5px" }}>
         {name}
       </Typography>
       {inputType === "select" ? (
         <select
+          sx={{ color: "#aaa", height: 50, mb: "20px" }}
           {...register(name, errorParams)}
           defaultValue=""
           disabled={items.length === 0}
