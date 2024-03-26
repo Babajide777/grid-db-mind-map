@@ -1,7 +1,7 @@
 const Details = [
   {
     inputType: "select",
-    name: "source",
+    name: "Source"
     // errorMessage: "Please enter a valid source.",
     // errorParams: {
     //   required: "source is required.",
@@ -13,34 +13,34 @@ const Details = [
   },
   {
     inputType: "text",
-    name: "positionX",
+    name: "PositionX",
     errorMessage: "Please enter a valid x.",
     errorParams: {
       required: "x is required.",
-      pattern: { value: /^\d+$/, message: "x must be numeric." },
-    },
+      pattern: { value: /^\d+$/, message: "x must be numeric." }
+    }
   },
   {
     inputType: "text",
-    name: "positionY",
+    name: "PositionY",
     errorMessage: "Please enter a valid y.",
     errorParams: {
       required: "y is required.",
-      pattern: { value: /^\d+$/, message: "y must be numeric." },
-    },
+      pattern: { value: /^\d+$/, message: "y must be numeric." }
+    }
   },
   {
     inputType: "text",
-    name: "label",
+    name: "Label",
     errorMessage: "Please enter a valid label.",
     errorParams: {
       required: "label is required.",
       pattern: {
         value: "\\b[A-Za-z]+\\b",
-        message: "label must be alphabets.",
-      },
-    },
-  },
-];
+        message: "label must be alphabets."
+      }
+    }
+  }
+]
 
-export { Details };
+export { Details }

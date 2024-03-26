@@ -168,9 +168,9 @@ function CustomNodes({ data, isConnectable }) {
   return (
     <Box
       sx={{
-        border: "2px solid black",
+        border: "2px solid #f9fbe7",
         width: "150px",
-        background: "#8bc34a",
+        background: "#f9fbe7",
         borderRadius: "10px",
       }}
     >
