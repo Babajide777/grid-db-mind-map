@@ -1,21 +1,20 @@
-
 ## GRID DB MIND MAP
 
-The app helps to make your ideas more organised and grouped according to where they fit in.
+The app helps to make visually organize your ideas
 
 ## Authors
 
-- [@kehindeOyafemi](https://github.com/kennyoyaf)
 - [@BabajideOyafemi](https://github.com/Babajide777)
+- [@kehindeOyafemi](https://github.com/kennyoyaf)
 
 ## Documentation
 
-* React
-* React-icons
-* Reactflow
-* Material-UI
-* Redux-toolkit
-* Uniqid
+- React
+- React-icons
+- Reactflow
+- Material-UI
+- Redux-toolkit
+- Uniqid
 
 ## Appendix
 
@@ -38,9 +37,9 @@ To deploy this project run
 Install project with npm
 
 ```bash
-  npm install 
+  npm install
 ```
-    
+
 ## Feedback
 
 If you have any feedback, please reach out to us at j.oyafemi@gmail.com
@@ -52,16 +51,19 @@ Clone the project
 ```bash
 https://github.com/Babajide777/grid-db-mind-map.git
 ```
+
 Go to the project directory
 
 ```bash
  cd client
 ```
+
 Install dependencies
 
 ```bash
  npm install
 ```
+
 Start the server
 
 ```bash
@@ -70,4 +72,8 @@ Start the server
 
 ## Tech Stack
 
-frontend: React, React-icon,Reactflow, Material-UI, Redux-toolkit, Uniqid
+frontend: React, React-icon, Reactflow, Material-UI, RTK Query, Uniqid
+
+Backend: ExpressJS, Joi
+
+Database: Grid DB
