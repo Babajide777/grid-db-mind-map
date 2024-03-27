@@ -14,7 +14,6 @@ import "reactflow/dist/style.css";
 import { Handle, Position } from "reactflow";
 import { MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { GiCheckMark } from "react-icons/gi";
 import {
   useDeleteMapItemMutation,
   useEditMapItemMutation,
@@ -84,7 +83,7 @@ export default function MainMindMap() {
       return {
         id: item.id,
         position: { x: item.x, y: item.y },
-        data: { item: item },
+        data: { item: item, mapItems: mapItems },
         type: "customNodes",
       };
     });
@@ -142,8 +141,10 @@ const style = {
 };
 
 function CustomNodes({ data, isConnectable }) {
-  const { item } = data;
+  const { item, mapItems } = data;
   const { id, source, x, y, label, target, lineId } = item;
+
+  const newArray = mapItems.filter((item) => item.id !== id);
 
   const [deleteMapItem] = useDeleteMapItemMutation();
   const [editMapItem] = useEditMapItemMutation();
@@ -189,11 +190,17 @@ function CustomNodes({ data, isConnectable }) {
           <Box sx={style}>
             <label htmlFor="">source</label>
             <select
-              defaultValue={source}
               style={{ width: "100%", height: "40px" }}
+              {...register("source")}
             >
-              <option></option>
+              <option value={source}>{label}</option>
+              {newArray.map((node) => (
+                <option key={node.id} value={node.id}>
+                  {node.label}
+                </option>
+              ))}
             </select>
+
             <label htmlFor="">positionX</label>
             <TextField
               type="text"
@@ -234,7 +241,6 @@ function CustomNodes({ data, isConnectable }) {
             />
             {errors.label && <p className="errorMsg">{errors.label.message}</p>}
 
-            {/* build form here. They can change source, x,y, and label. Source will be a drop down */}
             <Button
               variant="contained"
               color="primary"
@@ -243,26 +249,21 @@ function CustomNodes({ data, isConnectable }) {
                 width: "100%",
               }}
               sx={{ marginTop: "20px" }}
-              // color="black"
               size="1rem"
-              onClick={async (e) => {
+              onClick={handleSubmit(async (data) => {
                 try {
-                  const newLabel = e.target.value;
-                  // handleEditNode(item.id, { label: newLabel })
-
                   const res = await editMapItem({
                     id,
-                    source,
+                    source: data.source,
                     target,
-                    x: Number(x),
-                    y: Number(y),
-                    label,
+                    x: Number(data.x),
+                    y: Number(data.y),
+                    label: data.label,
                     lineId,
                   }).unwrap();
 
                   setOpen(false);
-                  reset();
-                  toast.success(`${res.data.message}`, {
+                  toast.success(`${res.message}`, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -276,10 +277,25 @@ function CustomNodes({ data, isConnectable }) {
                   setTimeout(() => {
                     window.location.reload();
                   }, 5000);
-                } catch (error) {}
-              }}
+                } catch (error) {
+                  let msg =
+                    error.message ||
+                    (error.data && error.data.message) ||
+                    "An error occurred";
+                  toast.error(`${msg}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                }
+              })}
             >
-              Update !
+              Update
             </Button>
           </Box>
         </Modal>
