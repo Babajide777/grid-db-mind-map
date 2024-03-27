@@ -1,6 +1,6 @@
-## GRID DB MEAL SERVER
+## GRID DB MIND MAP
 
-Grid db meal server: The servers are used to store the data coming from the frontend.
+Grid db mind map: The servers are used to store the data coming from the frontend.
 
 ## Authors
 
@@ -9,14 +9,14 @@ Grid db meal server: The servers are used to store the data coming from the fron
 
 ## API Reference
 
-route details to access the differnet functionalities
+route details to access the different functionalities
 
 ```bash
-  GET /all-meals
-  GET /meal-detail/${id}
-  POST /add-meal
-  PUT /edit-meal/${id}
-  DELETE /delete-meal/${id}
+  GET /all-map-items
+  GET /map-detail/${id}
+  POST /add-map-item
+  PUT /edit-map-item/${id}
+  DELETE /delete-map-item/${id}
 ```
 
 ## Documentation
@@ -61,7 +61,7 @@ If you have any feedback, please reach out to us at j.oyafemi@gmail.com
 Clone the project
 
 ```bash
-  git clone https://github.com/Babajide777/grid-db-meal-planner.git
+  git clone https://github.com/Babajide777/grid-db-mind-map.git
 ```
 
 Go to the project directory
