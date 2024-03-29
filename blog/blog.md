@@ -719,7 +719,7 @@ const editByID = async (store, conInfo, data) => {
 
 ```
 
-![Image](/blog/images/8.jpg)
+![Image](/blog/images/8.png)
 
 ### Step 9: Delete a Map Item
 
