@@ -61,9 +61,13 @@ ReactJS is a JavaScript library built and maintained by Meta for building user i
 
 Material UI is a comprehensive library of components from Google's Material Design system.
 
-### [Redux Toolkit](https://redux-toolkit.js.org/):
+### [RTK Query](https://redux-toolkit.js.org/rtk-query/overview):
 
 Redux Toolkit is a state management library.
+
+### [React Flow](https://reactflow.dev/):
+
+React Flow a customizable React component for building node-based editors and interactive diagrams
 
 To view the frontend of the app change to the client directory.
 
@@ -83,15 +87,20 @@ Then run the app using
 npm start
 ```
 
-![Home](https://github.com/Babajide777/grid-db-meal-planner/blob/main/client/src/components/assets/images/Gb-home.PNG?raw=true)
+![Image](/blog/images/1.png)
+![Image](/blog/images/1.png)
 
-The meal plan list page would show up.
+On the top right corner, we have the form that allows you to enter the details of a new idea. There are 4 input fields. Source is a dropdown of the node your idea is to be linked to. For example, the source for “Frontend developer” is “software developer”.
 
-For those who want to build the UI from scratch, the link to the [Figma](https://www.figma.com/file/TZKMNuFYmIrhJX9k8xYpTL/Untitled?type=design&node-id=293%3A1074&mode=design&t=cWSzt3F22jHWmrwj-1) design file has been provided.
+positionX is the position of the node on the x axis, positionY is the position of the ode on the Y axis, both of which are numbers, while label is the name of the node.
+
+On the bottom left corner, there are 4 buttons, the + sign is to zoom in, the – sign is to zoom out, the box sign is to centralize all the nodes, while the padlock sign is to lock or unlock things in place. On the bottom right, we have a min map that shows a miniature version of the entire canvas.
+
+Each node comes with a delete and edit button that allows you to both delete and edit details of a node.
 
 ## The Backend
 
-The backend in this project ensures the correct meal data is gotten from the frontend, and then save to the GridDB database. We are able to perform functionalities with the GridDB database.
+The backend in this project ensures the correct map item data is gotten from the frontend, and then save to the GridDB database. We are able to perform functionalities with the GridDB database.
 
 The proper CRUD functionalities are carried out in the app.
 
@@ -105,13 +114,11 @@ These are the packages that are needed to build the backend.
 
 - [Joi](https://joi.dev/api/?v=17.9.1): A schema description language and data validator for JavaScript
 
-- [UUID](https://www.npmjs.com/package/uuid): This package will be used to create a random ID.
-
-## Step-by-Step Guide to Building the Meal Plan App
+### Step-by-Step Guide to Building the Meal Plan App
 
 Follow the steps as explained below;
 
-## Step 1: Create a Server Folder
+#### Step 1: Create a Server Folder
 
 Create a “server” folder and initialize npm to generate a package.json file.
 You can name the folder anything you want:
@@ -120,12 +127,12 @@ You can name the folder anything you want:
 npm i
 ```
 
-## Step 2: Install Required Packages
+#### Step 2: Install Required Packages
 
 We are going to install all the required packages at once by running the following line of code:
 
 ```bash
-npm i express morgan joi uuid  griddb-node-api cors
+npm i express morgan joi griddb-node-api cors
 ```
 
 **_Addition_**
@@ -139,18 +146,16 @@ npm i -D nodemon
 
 ```bash
 {
-  "name": "meal-planner-server",
+  "name": "grid-db-mind-map-server",
   "version": "1.0.0",
-  "description": "backend for meal planner",
+  "description": "backend for grid db mind-map",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "meal-planner",
-    "meal",
-    "planner",
+    "mind-map",
     "griddb",
     "griddb_node"
   ],
@@ -162,16 +167,16 @@ npm i -D nodemon
     "griddb_node": "^0.8.4",
     "griddb-node-api": "^0.8.6",
     "joi": "^17.11.0",
-    "morgan": "^1.10.0",
-    "uuid": "^9.0.1"
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
 }
+
 ```
 
-### Step 3: Create Server.js File
+#### Step 3: Create Server.js File
 
 Create an server.js file and insert the following code:
 
@@ -179,19 +184,25 @@ Create an server.js file and insert the following code:
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
-const cors = require("cors")
+const cors = require("cors");
 
 const PORT = 4000 || process.env.PORT;
 
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors("*"))
-app.use("/api", require("./routes/mealRoutes"));
+app.use(cors("*"));
+
+app.get("/", (req, res) => {
+  res.send("GridDB mind map Backend API");
+});
+
+app.use("/api", require("./routes/mindMapRoutes"));
 
 app.listen(PORT, () => {
   console.log(`Server started on ${PORT}`);
 });
+
 ```
 
 If you installed nodemon as a dev dependency, you’ll need to add this line of code to the “scripts” section in your package.json file:
@@ -200,7 +211,7 @@ If you installed nodemon as a dev dependency, you’ll need to add this line of 
 "dev": "nodemon index.js"
 ```
 
-### Step 4: Run the Application
+#### Step 4: Run the Application
 
 If you installed nodemon, you could use ‘npm start’ to start the application, however, this would require you to restart the application any time you make changes, going against what nodemon is intended for. The following method doesn’t require you to restart the application when you make any changes (the benefit of nodemon):
 
@@ -208,18 +219,18 @@ If you installed nodemon, you could use ‘npm start’ to start the application
 npm run dev
 ```
 
-![Image](/blog/images/1.jpg)
+![Image](/blog/images/3.png)
 
-### Step 5: Setup the GridDB Database
+#### Step 5: Setup the GridDB Database
 
 We will connect to the GridDB database using the griddb-node-api package.
-We then set the container name of the project. I chose _"meal-planner"_ because it is related to the project. However, you can call it whatever you want.
+We then set the container name of the project. I chose _“mind-map”_ because it is related to the project. However, you can call it whatever you want.
 
 ```bash
 
 const griddb = require("griddb-node-api");
 
-const containerName = "meal-planner";
+const containerName = "mind-map";
 
 const initStore = async () => {
   const factory = griddb.StoreFactory.getInstance();
@@ -243,18 +254,12 @@ function initContainer() {
     name: containerName,
     columnInfoList: [
       ["id", griddb.Type.STRING],
-      ["title", griddb.Type.STRING],
-      ["calories", griddb.Type.DOUBLE],
-      ["fat", griddb.Type.DOUBLE],
-      ["cabs", griddb.Type.DOUBLE],
-      ["protein", griddb.Type.DOUBLE],
-      ["days", griddb.Type.STRING],
-      ["breakfast", griddb.Type.STRING],
-      ["lunch", griddb.Type.STRING],
-      ["dinner", griddb.Type.STRING],
-      ["snack1", griddb.Type.STRING],
-      ["snack2", griddb.Type.STRING],
-      ["snack3", griddb.Type.STRING],
+      ["source", griddb.Type.STRING],
+      ["target", griddb.Type.STRING],
+      ["x", griddb.Type.DOUBLE],
+      ["y", griddb.Type.DOUBLE],
+      ["label", griddb.Type.STRING],
+      ["lineId", griddb.Type.STRING],
     ],
     type: griddb.ContainerType.COLLECTION,
     rowKey: true,
@@ -284,66 +289,58 @@ async function initGridDbTS() {
     throw err;
   }
 }
-```
 
-The initStore function connects the app to the GridDB Cluster using the host, port, clusterName, username, and password.
-The initContainer function is used to set the columns for the container and the datatypes for the different columns.
-The createContainer creates the container while initGridDbTS initializes the database connection.
-
-### Step 6: Create a Meal plan
-
-To create a meal plan;
-
-```bash
-router.post("/add-meal", addMealPlan);
-```
-
-We use the Joi package to validate the request body sent from the frontend and then insert into the container that as created in step 6.
-
-```bash
-//meal plan validation rules
-const mealPlanValidation = async (field) => {
-  const schema = Joi.object({
-    title: Joi.string().required(),
-    calories: Joi.number().integer().required(),
-    fat: Joi.number().integer().required(),
-    cabs: Joi.number().integer().required(),
-    protein: Joi.number().integer().required(),
-    days: Joi.array()
-      .items(
-        Joi.string().valid(
-          "sunday",
-          "monday",
-          "tuesday",
-          "wednesday",
-          "thursday",
-          "friday",
-          "saturday"
-        )
-      )
-      .max(7)
-      .min(1)
-      .required(),
-    breakfast: Joi.string().required(),
-    lunch: Joi.string().required(),
-    dinner: Joi.string().required(),
-    snack1: Joi.string().required(),
-    snack2: Joi.string().required(),
-    snack3: Joi.string().required(),
-  });
-  try {
-    return await schema.validateAsync(field, { abortEarly: false });
-  } catch (err) {
-    return err;
+async function containersInfo(store) {
+  for (
+    var index = 0;
+    index < store.partitionController.partitionCount;
+    index++
+  ) {
+    store.partitionController
+      .getContainerNames(index, 0, -1)
+      .then((nameList) => {
+        nameList.forEach((element) => {
+          // Get container information
+          store.getContainerInfo(element).then((info) => {
+            if (info.name === containerName) {
+              console.log("Container Info: \n💽 %s", info.name);
+              if (info.type == griddb.ContainerType.COLLECTION) {
+                console.log("📦 Type: Collection");
+              } else {
+                console.log("📦 Type: TimeSeries");
+              }
+              //console.log("rowKeyAssigned=%s", info.rowKey.toString());
+              console.log("🛢️  Column Count: %d", info.columnInfoList.length);
+              info.columnInfoList.forEach((element) =>
+                console.log("🔖 Column (%s, %d)", element[0], element[1])
+              );
+            }
+          });
+        });
+        return true;
+      })
+      .catch((err) => {
+        if (err.constructor.name == "GSException") {
+          for (var i = 0; i < err.getErrorStackSize(); i++) {
+            console.log("[%d]", i);
+            console.log(err.getErrorCode(i));
+            console.log(err.getMessage(i));
+          }
+        } else {
+          console.log(err);
+        }
+      });
   }
-};
+}
 
-
-
-
+/**
+ * Insert data to GridDB
+ */
 async function insert(data, container) {
   try {
-    await container.put(data);
+    let savedData = await container.put(data);
+
+    console.log(savedData);
     return { status: true };
   } catch (err) {
     if (err.constructor.name == "GSException") {
@@ -360,273 +357,16 @@ async function insert(data, container) {
     }
   }
 }
-```
 
-Before that, the uuid package is used to generate a random id. After the meal plan is saved to the database, we then query the meal plan using the created random id to get the details of the saved meal plan.
-
-```bash
-async function queryByID(id, conInfo, store) {
+async function multiInsert(data, db) {
   try {
-    const cont = await store.putContainer(conInfo);
-    const row = await cont.get(id);
-    return row;
+    await db.multiPut(data);
+    return { ok: true };
   } catch (err) {
-    console.log(err, "here");
+    console.log(err);
+    return { ok: false, error: err };
   }
 }
-
-
-
-
-const addMealPlan = async (req, res) => {
-  //validate req.body
-
-  const { collectionDb, store, conInfo } = await initGridDbTS();
-
-  const { details } = await mealPlanValidation(req.body);
-  if (details) {
-    let allErrors = details.map((detail) => detail.message.replace(/"/g, ""));
-    return responseHandler(res, allErrors, 400, false, "");
-  }
-
-  try {
-    const {
-      title,
-      calories,
-      fat,
-      cabs,
-      protein,
-      days,
-      breakfast,
-      lunch,
-      dinner,
-      snack1,
-      snack2,
-      snack3,
-    } = req.body;
-
-    const id = uuidv4();
-
-    const data = [
-      id,
-      title,
-      calories,
-      fat,
-      cabs,
-      protein,
-      days.join(";"),
-      breakfast,
-      lunch,
-      dinner,
-      snack1,
-      snack2,
-      snack3,
-    ];
-
-    const saveStatus = await insert(data, collectionDb);
-
-    if (saveStatus.status) {
-      const result = await queryByID(id, conInfo, store);
-      return responseHandler(
-        res,
-        "Meal plan saved successfully",
-        201,
-        true,
-        result
-      );
-    }
-
-    return responseHandler(
-      res,
-      "Unable to save meal plan",
-      400,
-      false,
-      saveStatus.error
-    );
-  } catch (error) {
-    responseHandler(res, "Error saving meal plan", 400, false, error);
-  }
-};
-```
-
-The meal plan details are then sent to the frontend as a json response.
-
-![Image](/blog/images/2.jpg)
-
-![Image](/blog/images/3.jpg)
-
-### Step 7: Get a Meal Plan Details
-
-The id of the meal plan that is required is gotten from the params of the request data.
-
-```bash
-router.get("/meal-detail/:id", mealPlanDetails);
-```
-
-Then id of the meal plan is then queried with the data in the database and a 200 response with the meal plan data is sent if the meal plan is found.
-
-```bash
-const mealPlanDetails = async (req, res) => {
-  const { store, conInfo } = await initGridDbTS();
-  const { id } = req.params;
-
-  const result = await queryByID(id, conInfo, store);
-
-  return result
-    ? responseHandler(res, "meal plan detail found", 200, true, result)
-    : responseHandler(res, "No meal plan found", 400, false, "");
-};
-```
-
-![Image](/blog/images/4.jpg)
-
-![Image](/blog/images/5.jpg)
-
-### Step 8: Edit a Meal Plan
-
-```bash
-router.put("/edit-meal/:id", editMealPlan);
-```
-
-To edit a meal plan, again the id of the required meal plan is sent in the params of the request. The meal plan is queried using the given id and the old details of the meal plan is replaced by the new ones.
-
-```bash
-const editMealPlan = async (req, res) => {
-  const { store, conInfo } = await initGridDbTS();
-  const { id } = req.params;
-
-  const result = await queryByID(id, conInfo, store);
-
-  if (!result) {
-    return responseHandler(res, "incorrect meal plan ID", 400, false, "");
-  }
-
-  const {
-    title,
-    calories,
-    fat,
-    cabs,
-    protein,
-    days,
-    breakfast,
-    lunch,
-    dinner,
-    snack1,
-    snack2,
-    snack3,
-  } = req.body;
-
-  const data = [
-    id,
-    title,
-    calories,
-    fat,
-    cabs,
-    protein,
-    days.join(";"),
-    breakfast,
-    lunch,
-    dinner,
-    snack1,
-    snack2,
-    snack3,
-  ];
-
-  const check = await editByID(store, conInfo, data);
-
-  if (check[0]) {
-    const result2 = await queryByID(id, conInfo, store);
-
-    return responseHandler(
-      res,
-      "meal plan edited successfully",
-      200,
-      true,
-      result2
-    );
-  }
-  return responseHandler(res, "Error editing meal plan", 400, false, "");
-};
-
-const editByID = async (store, conInfo, data) => {
-  try {
-    const cont = await store.putContainer(conInfo);
-    const res = await cont.put(data);
-    return [true, ""];
-  } catch (err) {
-    return [false, err];
-  }
-};
-
-```
-
-![Image](/blog/images/6.jpg)
-
-### Step 9: Delete a Meal Plan
-
-```bash
-router.delete("/delete-meal/:id", deleteMealPlan);
-```
-
-The id is gotten from the params or the request data and that is used to delete the row containing the required meal plan.
-
-```bash
-const deleteMealPlan = async (req, res) => {
-  const { store, conInfo } = await initGridDbTS();
-  const { id } = req.params;
-
-  const result = await deleteByID(store, id, conInfo);
-
-  return result[0]
-    ? responseHandler(res, "meal plan deleted successfully", 200, true, "")
-    : responseHandler(res, "Error deleting meal plan", 400, false, "");
-};
-
-
-//Delete entry
-const deleteByID = async (store, id, conInfo) => {
-  try {
-    const cont = await store.putContainer(conInfo);
-    let res = await cont.remove(id);
-
-    return [true, res];
-  } catch (error) {
-    return [false, error];
-  }
-};
-```
-
-![Image](/blog/images/7.jpg)
-
-![Image](/blog/images/8.jpg)
-
-### Step 10: Get List of All Meal Plans in the Database
-
-To get list of all meal plans in the database, you have to do this;
-
-```bash
-router.get("/all-meals", getAllMealPlans);
-```
-
-This returns all the meal plans in the database.
-
-```bash
-const getAllMealPlans = async (req, res) => {
-  const { store, conInfo } = await initGridDbTS();
-  const result = await queryAll(conInfo, store);
-
-  return result.length
-    ? responseHandler(
-        res,
-        "all meal plans in the database successfully retrieved",
-        200,
-        true,
-        result.results
-      )
-    : responseHandler(res, "Unable to retrieve meal plans", 400, false, "");
-};
-
-
 
 async function queryAll(conInfo, store) {
   const sql = `SELECT *`;
@@ -647,12 +387,488 @@ async function queryAll(conInfo, store) {
   }
 }
 
+async function queryByID(id, conInfo, store) {
+  try {
+    const cont = await store.putContainer(conInfo);
+    const row = await cont.get(id);
+    return row;
+  } catch (err) {
+    console.log(err, "here");
+  }
+}
+
+// Delete container
+async function dropContainer(store, containerName) {
+  store
+    .dropContainer(containerName)
+    .then(() => {
+      console.log("drop ok");
+      return store.putContainer(conInfo);
+    })
+    .catch((err) => {
+      if (err.constructor.name == "GSException") {
+        for (var i = 0; i < err.getErrorStackSize(); i++) {
+          console.log("[%d]", i);
+          console.log(err.getErrorCode(i));
+          console.log(err.getMessage(i));
+        }
+      } else {
+        console.log(err);
+      }
+    });
+}
+
+//Delete entry
+const deleteByID = async (store, id, conInfo) => {
+  try {
+    const cont = await store.putContainer(conInfo);
+    let res = await cont.remove(id);
+
+    return [true, res];
+  } catch (error) {
+    return [false, error];
+  }
+};
+
+const editByID = async (store, conInfo, data) => {
+  try {
+    const cont = await store.putContainer(conInfo);
+    const res = await cont.put(data);
+    return [true, ""];
+  } catch (err) {
+    return [false, err];
+  }
+};
+
+module.exports = {
+  initStore,
+  initContainer,
+  initGridDbTS,
+  createContainer,
+  insert,
+  multiInsert,
+  queryAll,
+  dropContainer,
+  containersInfo,
+  containerName,
+  queryByID,
+  deleteByID,
+  editByID,
+};
+
+```
+
+The initStore function connects the app to the GridDB Cluster using the host, port, clusterName, username, and password.
+
+The initContainer function is used to set the columns for the container and the datatypes for the different columns.
+
+The createContainer creates the container while initGridDbTS initializes the database connection.
+
+#### Step 6: Create a Meal plan
+
+To create a mind map item
+
+```bash
+router.post("/add-meal", addMealPlan);
+```
+
+We use the Joi package to validate the request body sent from the frontend and then insert into the container that as created in step 6.
+
+```bash
+
+const Joi = require("joi");
+
+//map item validation rules
+const mapItemValidation = async (field) => {
+  const schema = Joi.object({
+    id: Joi.string().required(),
+    source: Joi.string().required(),
+    target: Joi.string().required(),
+    x: Joi.number().integer().required(),
+    y: Joi.number().integer().required(),
+    label: Joi.string().required(),
+    lineId: Joi.string().required(),
+  });
+  try {
+    return await schema.validateAsync(field, { abortEarly: false });
+  } catch (err) {
+    return err;
+  }
+};
+
+module.exports = {
+  mapItemValidation,
+};
+
+
+```
+
+```bash
+
+async function insert(data, container) {
+  try {
+    let savedData = await container.put(data);
+
+    console.log(savedData);
+    return { status: true };
+  } catch (err) {
+    if (err.constructor.name == "GSException") {
+      for (var i = 0; i < err.getErrorStackSize(); i++) {
+        console.log("[%d]", i);
+        console.log(err.getErrorCode(i));
+        console.log(err.getMessage(i));
+      }
+
+      return { status: false, error: err.toString() };
+    } else {
+      console.log(err);
+      return { status: false, error: err };
+    }
+  }
+}
+
+```
+
+The id and lineId are randomly generated on the frontend and sent along with the source, target, x, y, and label. After the map item is saved to the database, we then query the map item using the created random id to get the details of the saved map item.
+
+```bash
+async function queryByID(id, conInfo, store) {
+  try {
+    const cont = await store.putContainer(conInfo);
+    const row = await cont.get(id);
+    return row;
+  } catch (err) {
+    console.log(err, "here");
+  }
+}
+
+
+```
+
+```bash
+const addMealItem = async (req, res) => {
+  //validate req.body
+  const { collectionDb, store, conInfo } = await initGridDbTS();
+
+  const { details } = await mapItemValidation(req.body);
+  if (details) {
+    let allErrors = details.map((detail) => detail.message.replace(/"/g, ""));
+    return responseHandler(res, allErrors, 400, false, "");
+  }
+
+  try {
+    const { id, source, target, x, y, label, lineId } = req.body;
+
+    const data = [id, source, target, x, y, label, lineId];
+
+    const saveStatus = await insert(data, collectionDb);
+
+    if (saveStatus.status) {
+      const result = await queryByID(id, conInfo, store);
+      let returnData = {
+        id: result[0],
+        source: result[1],
+        target: result[2],
+        x: result[3],
+        y: result[4],
+        label: result[5],
+        lineId: result[6],
+      };
+
+      return responseHandler(
+        res,
+        "Map Item saved successfully",
+        201,
+        true,
+        returnData
+      );
+    }
+
+    return responseHandler(
+      res,
+      "Unable to save map item",
+      400,
+      false,
+      saveStatus.error
+    );
+  } catch (error) {
+    responseHandler(res, "Error saving map item", 400, false, error.message);
+  }
+};
+
+
+```
+
+The map plan item details are then sent to the frontend as a json response.
+
+![Image](/blog/images/4.png)
+
+![Image](/blog/images/5.png)
+
+#### Step 7: Get a Map Item Detail
+
+The id of the map item that is required is gotten from the params of the request data.
+
+```bash
+router.get("/map-detail/:id", mapItemDetails);
+```
+
+Then id of the map item is then queried with the data in the database and a 200 response with the map item data is sent if the map item is found.
+
+This route will mostly be used to get the details of a map item that is to be edited.
+
+```bash
+const mapItemDetails = async (req, res) => {
+  try {
+    const { store, conInfo } = await initGridDbTS();
+    const { id } = req.params;
+
+    const result = await queryByID(id, conInfo, store);
+
+    let returnData = {
+      id: result[0],
+      source: result[1],
+      target: result[2],
+      x: result[3],
+      y: result[4],
+      label: result[5],
+      lineId: result[6],
+    };
+
+    return result
+      ? responseHandler(res, "map item detail found", 200, true, returnData)
+      : responseHandler(res, "No map item detail found", 400, false, "");
+  } catch (error) {
+    responseHandler(res, "Error saving map item", 400, false, error.message);
+  }
+};
+
+```
+
+![Image](/blog/images/6.png)
+
+![Image](/blog/images/7.png)
+
+#### Step 8: Edit a Map Item
+
+```bash
+router.put("/edit-map-item/:id", editMapItem);
+```
+
+To edit a map item, again the id of the required map item is sent in the params of the request. The map item is queried using the given id and the old details of the map item is replaced by the new ones.
+
+```bash
+const editMapItem = async (req, res) => {
+  try {
+    const { store, conInfo } = await initGridDbTS();
+    const { id } = req.params;
+
+    const result = await queryByID(id, conInfo, store);
+
+    if (!result) {
+      return responseHandler(res, "incorrect map item ID", 400, false, "");
+    }
+
+    const { source, target, x, y, label, lineId } = req.body;
+
+    const data = [id, source, target, x, y, label, lineId];
+
+    const check = await editByID(store, conInfo, data);
+
+    if (check[0]) {
+      const result2 = await queryByID(id, conInfo, store);
+
+      let returnData = {
+        id: result2[0],
+        source: result2[1],
+        target: result2[2],
+        x: result2[3],
+        y: result2[4],
+        label: result2[5],
+        lineId: result2[6],
+      };
+
+      return responseHandler(
+        res,
+        "map item edited successfully",
+        200,
+        true,
+        returnData
+      );
+    }
+    return responseHandler(res, "Error editing map item ", 400, false, "");
+  } catch (error) {
+    responseHandler(res, "Error saving map item", 400, false, error.message);
+  }
+};
+
+
+```
+
+```bash
+const editByID = async (store, conInfo, data) => {
+  try {
+    const cont = await store.putContainer(conInfo);
+    const res = await cont.put(data);
+    return [true, ""];
+  } catch (err) {
+    return [false, err];
+  }
+};
+
+
+```
+
+![Image](/blog/images/8.jpg)
+
+### Step 9: Delete a Map Item
+
+```bash
+router.delete("/delete-map-item/:id", deleteMapItem);
+```
+
+The id is gotten from the params or the request data and that is used to delete the row containing the specified map item.
+
+```bash
+const deleteMapItem = async (req, res) => {
+  try {
+    const { store, conInfo } = await initGridDbTS();
+    const { id } = req.params;
+
+    const result = await deleteByID(store, id, conInfo);
+
+    return result[0]
+      ? responseHandler(res, "map item deleted successfully", 200, true, "")
+      : responseHandler(res, "Error deleting map item", 400, false, "");
+  } catch (error) {
+    responseHandler(res, "Error saving map item", 400, false, error.message);
+  }
+};
+
+
+```
+
+```bash
+
+const deleteByID = async (store, id, conInfo) => {
+  try {
+    const cont = await store.putContainer(conInfo);
+    let res = await cont.remove(id);
+
+    return [true, res];
+  } catch (error) {
+    return [false, error];
+  }
+};
+
+
 ```
 
 ![Image](/blog/images/9.png)
 
-![Image](/blog/images/10.jpg)
+![Image](/blog/images/10.png)
+
+### Step 10: Get List of All Map Items in the Database
+
+To get list of all map items in the database, you have to do this;
+
+```bash
+router.get("/all-map-items", getAllMapItems);
+```
+
+This returns all the map items in the database.
+
+```bash
+const getAllMapItems = async (req, res) => {
+  try {
+    const { store, conInfo } = await initGridDbTS();
+    const result = await queryAll(conInfo, store);
+    let data = [];
+
+    result.results.forEach((result) => {
+      let returnData = {
+        id: result[0],
+        source: result[1],
+        target: result[2],
+        x: result[3],
+        y: result[4],
+        label: result[5],
+        lineId: result[6],
+      };
+      data.push(returnData);
+
+      return result;
+    });
+
+    return responseHandler(
+      res,
+      "all map items in the database successfully retrieved",
+      200,
+      true,
+      data
+    );
+  } catch (error) {
+    return responseHandler(
+      res,
+      "Unable to retrieve meal plans",
+      400,
+      false,
+      ""
+    );
+  }
+};
+
+
+
+```
+
+```bash
+async function queryAll(conInfo, store) {
+  const sql = `SELECT *`;
+  const cont = await store.putContainer(conInfo);
+  const query = await cont.query(sql);
+  try {
+    const rowset = await query.fetch();
+    const results = [];
+
+    while (rowset.hasNext()) {
+      const row = rowset.next();
+      results.push(row);
+    }
+    return { results, length: results.length };
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+
+```
+
+![Image](/blog/images/11.png)
+
+## Frontend and Backend connected
+
+The essence of this app is to connect the backend with the frontend to ensure the app is fully functional. I built a short software developer roadmap to test the functionality of the app.
+
+![Image](/blog/images/12.png)
 
 ## Conclusion
 
-The daily meal plan app created has a dynamic and user-friendly interface. What makes it special is the easy integration of the GridDB database to store, edit, and retrieve meal-related data. This ensures you can set up API calls easily fetch meal plan data from the database. Whether you’re aiming to meet your fitness goals or just want to treat your taste buds, this daily meal plan app is all you need.
+In this comprehensive guide, we've embarked on a journey of innovation, inspired by the visionary creators of history who turned simple ideas into transformative realities.
+
+From the foundational work of Charles Babbage to the groundbreaking achievements of modern-day innovators like Thomas Edison, Steve Jobs, and Bill Gates, we've witnessed the power of mapping out ideas and translating them into tangible outcomes.
+
+By delving into the realm of frontend software engineering, we've explored the potential to reshape our lives and the world around us. Leveraging the latest technologies such as ReactJS, ReactFlow, ExpressJS, GridDB, and NodeJS, we've embarked on the creation of a fullstack web mind map application, bridging the gap between imagination and implementation.
+
+At the heart of our journey lies GridDB, a versatile and scalable NoSQL time-series database optimized for IoT and Big Data applications. Through its integration into our project, we've unlocked new possibilities for data visualization and management, empowering us to bring our ideas to life with precision and efficiency.
+
+From the installation process to the development of frontend and backend components, we've navigated through each step with clarity and purpose. By following our step-by-step guide, you've gained the knowledge and tools necessary to embark on your own journey of innovation, armed with the skills to create impactful solutions in the digital landscape.
+
+As we conclude our exploration, remember that innovation knows no bounds.
+
+Whether you're a seasoned developer or a budding enthusiast, the path to discovery awaits. Embrace the spirit of creativity, challenge the status quo, and let your ideas soar.
+
+With determination and perseverance, you have the power to shape the future.
+
+Let's continue to innovate, inspire, and make a difference in the world.
