@@ -11,15 +11,16 @@ const { responseHandler } = require("../utils/responseHandler");
 
 const addMealItem = async (req, res) => {
   //validate req.body
-  const { collectionDb, store, conInfo } = await initGridDbTS();
-
-  const { details } = await mapItemValidation(req.body);
-  if (details) {
-    let allErrors = details.map((detail) => detail.message.replace(/"/g, ""));
-    return responseHandler(res, allErrors, 400, false, "");
-  }
 
   try {
+    const { collectionDb, store, conInfo } = await initGridDbTS();
+
+    const { details } = await mapItemValidation(req.body);
+    if (details) {
+      let allErrors = details.map((detail) => detail.message.replace(/"/g, ""));
+      return responseHandler(res, allErrors, 400, false, "");
+    }
+
     const { id, source, target, x, y, label, lineId } = req.body;
 
     const data = [id, source, target, x, y, label, lineId];
@@ -172,6 +173,7 @@ const getAllMapItems = async (req, res) => {
       data
     );
   } catch (error) {
+    console.log(error);
     return responseHandler(
       res,
       "Unable to retrieve meal plans",
