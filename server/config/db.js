@@ -7,7 +7,7 @@ const initStore = async () => {
   try {
     // Connect to GridDB Cluster
     const store = await factory.getStore({
-      host: "127.0.0.1",
+      host: "griddb-server",
       port: 10001,
       clusterName: "myCluster",
       username: "admin",
