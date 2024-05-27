@@ -9,7 +9,7 @@ const initStore = async () => {
     const store = await factory.getStore({
       host: "127.0.0.1",
       port: 10001,
-      clusterName: "myCluster",
+      clusterName: "dockerGridDB",
       username: "admin",
       password: "admin",
     });
