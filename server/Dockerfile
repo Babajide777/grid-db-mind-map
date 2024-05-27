@@ -1,7 +1,6 @@
 FROM node:20
 
-# Make c_client
-WORKDIR /app
+WORKDIR /tmp
 
 RUN apt-get update && \
     apt-get install -y dpkg && \
@@ -10,10 +9,11 @@ RUN apt-get update && \
 RUN wget --no-check-certificate https://github.com/griddb/c_client/releases/download/v5.5.0/griddb-c-client_5.5.0_amd64.deb
 RUN dpkg -i griddb-c-client_5.5.0_amd64.deb
 
-COPY package*.json ./
-
+WORKDIR /app
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 RUN npm install
 
-COPY . .
+COPY . . 
 
-ENTRYPOINT ["npm", "run", "start", "griddb-server:10001", "myCluster", "admin", "admin"]
+ENTRYPOINT ["npm", "start"]
