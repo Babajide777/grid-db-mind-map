@@ -8,7 +8,8 @@ import theme from "./config/theme";
 import MainMindMap from "./components/MainMindMap";
 import FormInput from "./components/FormInput";
 import { Provider } from "react-redux";
-import store from "./store/store";
+import store, { persistor } from "./store/store";
+import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,10 +17,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <Box component="main" style={styles.mainContianer} display="flex">
-          <MainMindMap />
-          <FormInput />
-        </Box>
+        <PersistGate loading={null} persistor={persistor}>
+          <Box component="main" style={styles.mainContianer} display="flex">
+            <MainMindMap />
+            <FormInput />
+          </Box>
+        </PersistGate>
       </Provider>
       <CssBaseline />
       <ToastContainer />
