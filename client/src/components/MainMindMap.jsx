@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -23,12 +23,22 @@ import { toast } from "react-toastify";
 
 const handleStyle = { left: 10 };
 
+// const nodeTypes = {
+//   customNodes: CustomNodes,
+// };
+
 export default function MainMindMap() {
-  const { data } = useGetAllMapItemsQuery("mapItems", {
+  const { data, error, isLoading } = useGetAllMapItemsQuery("mapItems", {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
+
+  useEffect(() => {
+    console.log("Data fetched:", data);
+    console.log("Loading:", isLoading);
+    console.log("Error:", error);
+  }, [data, isLoading, error]);
 
   let initialNodes = [];
   let initialEdges = [];
@@ -37,21 +47,20 @@ export default function MainMindMap() {
     const { entities } = data;
     const mapItems = Object.values(entities);
 
-    const theInitialNodes = mapItems.map((item) => {
-      return {
-        id: item.id,
-        position: { x: item.x, y: item.y },
-        data: { item: item, mapItems: mapItems },
-        type: "customNodes",
-      };
-    });
+    console.log("Map Items:", mapItems);
 
-    const theInitialEdges = mapItems.map((item) => {
-      return { id: item.lineId, source: item.source, target: item.target };
-    });
+    initialNodes = mapItems.map((item) => ({
+      id: item.id,
+      position: { x: item.x, y: item.y },
+      data: { item, mapItems },
+      type: "customNodes",
+    }));
 
-    initialNodes = [...theInitialNodes];
-    initialEdges = [...theInitialEdges];
+    initialEdges = mapItems.map((item) => ({
+      id: item.lineId,
+      source: item.source,
+      target: item.target,
+    }));
   }
 
   const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
@@ -64,6 +73,11 @@ export default function MainMindMap() {
     [setEdges]
   );
 
+  useEffect(() => {
+    console.log("Initial Nodes:", initialNodes);
+    console.log("Initial Edges:", initialEdges);
+  }, [initialNodes, initialEdges]);
+
   return (
     <div
       sx={{ display: "flex", position: "relative" }}
@@ -75,7 +89,7 @@ export default function MainMindMap() {
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        style={{ width: "100vw" }}
+        style={{ width: "100vw", height: "100vh" }}
         nodeTypes={nodeTypes}
       >
         <MiniMap />
@@ -99,6 +113,7 @@ const style = {
 };
 
 function CustomNodes({ data, isConnectable }) {
+  console.log("Custom Node Data:", data);
   const { item, mapItems } = data;
   const { id, source, x, y, label, target, lineId } = item;
 
@@ -109,11 +124,9 @@ function CustomNodes({ data, isConnectable }) {
 
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const [open, setOpen] = useState(false);
   const handleEdit = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -131,6 +144,7 @@ function CustomNodes({ data, isConnectable }) {
         width: "150px",
         background: "#f9fbe7",
         borderRadius: "10px",
+        // height: "50px",
       }}
     >
       <Handle

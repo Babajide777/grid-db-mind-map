@@ -1,38 +1,35 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import { mapItemApiSlice } from "./Features/mapItem/mapItemApiSlice";
+// "use client";
 
-const userDataPersistConfig = {
-  key: "mapItems",
-  version: 1,
-  storage,
-};
+// import { configureStore } from "@reduxjs/toolkit";
+// import { apiSlice } from "./api/apiSlice";
+// import auth from "./Features/auth/authSlice";
 
-const rootReducer = combineReducers({
-  [mapItemApiSlice.reducerPath]: mapItemApiSlice.reducer,
-});
-const persistedReducer = persistReducer(userDataPersistConfig, rootReducer);
+// let store = configureStore({
+//   reducer: {
+//     [apiSlice.reducerPath]: apiSlice.reducer,
+//     auth,
+//   },
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware().concat(apiSlice.middleware),
+//   devTools: false,
+// });
 
-let store = configureStore({
-  reducer: persistedReducer,
+// export default store;
+
+// store/store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import { apiSlice } from "./api/apiSlice";
+// import auth from "./Features/auth/authSlice";
+
+const store = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }).concat(mapItemApiSlice.middleware),
-  devTools: true,
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
-export const persistor = persistStore(store);
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
+
 export default store;
