@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -23,9 +23,9 @@ import { toast } from "react-toastify";
 
 const handleStyle = { left: 10 };
 
-// const nodeTypes = {
-//   customNodes: CustomNodes,
-// };
+const nodeTypes = {
+  customNodes: CustomNodes,
+};
 
 export default function MainMindMap() {
   const { data, error, isLoading } = useGetAllMapItemsQuery("mapItems", {
@@ -34,49 +34,36 @@ export default function MainMindMap() {
     refetchOnMountOrArgChange: true,
   });
 
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   useEffect(() => {
-    console.log("Data fetched:", data);
-    console.log("Loading:", isLoading);
-    console.log("Error:", error);
-  }, [data, isLoading, error]);
+    if (data) {
+      const { entities } = data;
+      const mapItems = Object.values(entities);
 
-  let initialNodes = [];
-  let initialEdges = [];
+      const initialNodes = mapItems.map((item) => ({
+        id: item.id,
+        position: { x: item.x, y: item.y },
+        data: { item, mapItems },
+        type: "customNodes",
+      }));
 
-  if (data) {
-    const { entities } = data;
-    const mapItems = Object.values(entities);
+      const initialEdges = mapItems.map((item) => ({
+        id: item.lineId,
+        source: item.source,
+        target: item.target,
+      }));
 
-    console.log("Map Items:", mapItems);
-
-    initialNodes = mapItems.map((item) => ({
-      id: item.id,
-      position: { x: item.x, y: item.y },
-      data: { item, mapItems },
-      type: "customNodes",
-    }));
-
-    initialEdges = mapItems.map((item) => ({
-      id: item.lineId,
-      source: item.source,
-      target: item.target,
-    }));
-  }
-
-  const nodeTypes = useMemo(() => ({ customNodes: CustomNodes }), []);
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [data, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-
-  useEffect(() => {
-    console.log("Initial Nodes:", initialNodes);
-    console.log("Initial Edges:", initialEdges);
-  }, [initialNodes, initialEdges]);
 
   return (
     <div
@@ -84,12 +71,12 @@ export default function MainMindMap() {
       style={{ width: "100vw", height: "100vh" }}
     >
       <ReactFlow
+        style={{ width: "100vw", height: "100vh" }}
         nodes={nodes}
         edges={edges}
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        style={{ width: "100vw", height: "100vh" }}
         nodeTypes={nodeTypes}
       >
         <MiniMap />
@@ -113,7 +100,6 @@ const style = {
 };
 
 function CustomNodes({ data, isConnectable }) {
-  console.log("Custom Node Data:", data);
   const { item, mapItems } = data;
   const { id, source, x, y, label, target, lineId } = item;
 
@@ -144,7 +130,6 @@ function CustomNodes({ data, isConnectable }) {
         width: "150px",
         background: "#f9fbe7",
         borderRadius: "10px",
-        // height: "50px",
       }}
     >
       <Handle
@@ -246,9 +231,9 @@ function CustomNodes({ data, isConnectable }) {
                     theme: "light",
                   });
 
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 5000);
+                  // setTimeout(() => {
+                  //   window.location.reload();
+                  // }, 5000);
                 } catch (error) {
                   let msg =
                     error.message ||
@@ -312,9 +297,9 @@ function CustomNodes({ data, isConnectable }) {
                   theme: "light",
                 });
 
-                setTimeout(() => {
-                  window.location.reload();
-                }, 5000);
+                // setTimeout(() => {
+                //   window.location.reload();
+                // }, 5000);
               } catch (error) {
                 let msg =
                   error.message ||
