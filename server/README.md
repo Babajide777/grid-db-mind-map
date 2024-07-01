@@ -70,16 +70,16 @@ Go to the project directory
  cd server
 ```
 
-Install dependencies
+Build docker compose file
 
 ```bash
- npm install
+ docker-compose build
 ```
 
-Start the server
+Run docker
 
 ```bash
-  npm run dev
+ docker-compose up
 ```
 
 ## Tech Stack
