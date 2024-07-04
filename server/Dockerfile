@@ -10,8 +10,8 @@ RUN wget --no-check-certificate https://github.com/griddb/c_client/releases/down
 RUN dpkg -i griddb-c-client_5.5.0_amd64.deb
 
 WORKDIR /app
-COPY package.json /app/package.json
-COPY package-lock.json /app/package-lock.json
+COPY package.json /
+COPY package-lock.json /
 RUN npm install
 
 COPY . . 
